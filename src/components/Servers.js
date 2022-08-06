@@ -151,7 +151,7 @@ export default function Servers() {
                                     }))].sort().map(
                                         country => {
                                             return (
-                                                <option value={country}>
+                                                <option value={country} key={`country-filter-${country}`}>
                                                     {(lookup.byIso(country) || {}).country}
                                                 </option>
                                             )
@@ -174,7 +174,7 @@ export default function Servers() {
                                     }))].sort().map(
                                         proto => {
                                             return (
-                                                <option value={proto}>
+                                                <option value={proto} key={`proto-filter-${proto}`}>
                                                     {proto}
                                                 </option>
                                             )
@@ -188,7 +188,7 @@ export default function Servers() {
                         <div className="p-3 select-none">
                             <input type="checkbox" onChange={(e) => setFilterPrivate(e.target.checked)} id="private-filter" />
                             {" "}
-                            <label for="private-filter">Show only private</label>
+                            <label htmlFor="private-filter">Show only private</label>
                         </div>
                     </div>
                 </div>
