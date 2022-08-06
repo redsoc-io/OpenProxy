@@ -11,10 +11,14 @@
   "dependencies": {
     "next": "12.2.4",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "utf8": "^3.0.0"
   },
   "devDependencies": {
+    "autoprefixer": "^10.4.8",
     "eslint": "8.21.0",
-    "eslint-config-next": "12.2.4"
+    "eslint-config-next": "12.2.4",
+    "postcss": "^8.4.14",
+    "tailwindcss": "^3.1.8"
   }
 }
