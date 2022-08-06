@@ -27,7 +27,7 @@ export default async function handler(req, res) {
     if (pick_random) {
         const pac = write_proxy_pac(pick_random.url);
         res.setHeader('Content-Type', 'application/x-ns-proxy-autoconfig');
-        //res.setHeader("Content-Disposition", "attachment; filename=proxy.pac");
+        res.setHeader("Content-Disposition", "attachment; filename=proxy.pac");
         res.status(200).send(pac);
     }
     else {
