@@ -9,11 +9,13 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "country-code-lookup": "^0.0.20",
     "country-flag-icons": "^1.5.5",
     "next": "12.2.4",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-icons": "^4.4.0",
+    "react-responsive-masonry": "^2.1.5",
     "utf8": "^3.0.0"
   },
   "devDependencies": {

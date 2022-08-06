@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import getUnicodeFlagIcon from 'country-flag-icons/unicode'
 import { ImSpinner8 } from 'react-icons/im'
+import Masonry, { ResponsiveMasonry } from "react-responsive-masonry"
+const lookup = require('country-code-lookup')
 
 function Th({ children }) {
     return (
@@ -27,10 +29,16 @@ function ServerDisplay({ server }) {
     const server_speed_color = server_speed > 50 ? "bg-green-500" : server_speed > 30 ? "bg-orange-500" : "bg-red-500";
 
     return (
-        <div className="server p-3 w-1/4">
+        <div className="server p-3">
             <div className="shadow-md rounded-md overflow-hidden bg-white border">
-                <div className="flex items-center justify-center bg-gray-100 p-3">
-                    <p>{getUnicodeFlagIcon(server.data.country)} {server.data.city}, {server.data.country}</p>
+                <div className="flex items-center justify-center bg-gray-300 p-3">
+                    <p className="font-bold text-lg text-gray-800">{
+                        getUnicodeFlagIcon(server.data.country)}{" "}
+                        {server.data.city},{" "}
+                        {
+                            (lookup.byIso(server.data.country) || {}).country
+                        }
+                    </p>
                 </div>
                 <div className="w-full bg-gray-200 h-1">
                     <div className={`${server_speed_color} h-1`}
@@ -50,6 +58,12 @@ function ServerDisplay({ server }) {
                                 <Th>ISP</Th>
                                 <Td>
                                     {server.data.asn.name}
+                                </Td>
+                            </tr>
+                            <tr>
+                                <Th>Private</Th>
+                                <Td>
+                                    {server.private ? "Yes" : "No"}
                                 </Td>
                             </tr>
                         </tbody>
@@ -72,6 +86,12 @@ export default function Servers() {
     const [servers, setServers] = useState([]);
     const [loading, setLoading] = useState(true);
 
+    const [sort, setSort] = useState(true);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [filterCountry, setFilterCountry] = useState("");
+    const [filterPrivate, setFilterPrivate] = useState(false);
+    const [filterProtocol, setFilterProtocol] = useState("");
+
     useEffect(() => {
         fetch("/api/servers")
             .then(res => res.json())
@@ -83,9 +103,97 @@ export default function Servers() {
             );
     }, []);
 
+    const filtered = (sort ?
+        servers.sort((a, b) => b.speed_score - a.speed_score)
+        :
+        servers
+    )
+        .filter(server => {
+            return JSON.stringify(server).toLowerCase().includes(searchTerm.toLowerCase())
+        })
+        .filter(server => {
+            return server.proto.toLowerCase().includes(filterProtocol.toLowerCase())
+        })
+        .filter(server => {
+            return server.data.country.toLowerCase().includes(filterCountry.toLowerCase())
+        })
+        .filter(
+            server => {
+                if (filterPrivate) {
+                    return server.private
+                } else {
+                    return true
+                }
+            }
+        )
     return (
         <div>
-            <div className="flex flex-wrap items-center justify-start p-4">
+            <div className="w-full py-5 px-4">
+                <div className="w-full bg-white flex">
+                    <div className="w-2/5">
+                        <div className="p-3">
+                            <input type="text"
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                className="w-full px-3 p-2 bg-gray-200 rounded-md shadow border text-gray-700" placeholder={`Search in ${servers.length} servers`}
+                            />
+                        </div>
+                    </div>
+                    <div className="w-1/5">
+                        <div className="p-3">
+                            <select
+                                className="w-full px-3 p-2 bg-gray-200 rounded-md shadow border text-gray-700"
+                                onChange={(e) => setFilterCountry(e.target.value)}
+                            >
+                                <option value="">{filterCountry ? "Show All" : "Filter by country"}</option>
+                                {
+                                    [...new Set(servers.map(server => {
+                                        return server.data.country
+                                    }))].sort().map(
+                                        country => {
+                                            return (
+                                                <option value={country}>
+                                                    {(lookup.byIso(country) || {}).country}
+                                                </option>
+                                            )
+                                        }
+                                    )
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div className="w-1/5">
+                        <div className="p-3">
+                            <select
+                                className="w-full px-3 p-2 bg-gray-200 rounded-md shadow border text-gray-700"
+                                onChange={(e) => setFilterProtocol(e.target.value)}
+                            >
+                                <option value="">{filterProtocol ? "Show All" : "Filter by protocol"}</option>
+                                {
+                                    [...new Set(servers.map(server => {
+                                        return server.proto
+                                    }))].sort().map(
+                                        proto => {
+                                            return (
+                                                <option value={proto}>
+                                                    {proto}
+                                                </option>
+                                            )
+                                        }
+                                    )
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <div className="p-3 select-none">
+                            <input type="checkbox" onChange={(e) => setFilterPrivate(e.target.checked)} id="private-filter" />
+                            {" "}
+                            <label for="private-filter">Show only private</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="p-4 w-full">
                 {
                     loading &&
                     <div className="w-full h-full flex items-center justify-center mt-12">
@@ -94,11 +202,18 @@ export default function Servers() {
                         </div>
                     </div>
                 }
-                {
-                    servers.map(server => {
-                        return <ServerDisplay key={server.url} server={server} />
-                    })
-                }
+                <ResponsiveMasonry
+                    columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 3 }}
+                >
+                    <Masonry>
+                        {
+                            filtered
+                                .map(server => {
+                                    return <ServerDisplay key={server.url} server={server} />
+                                })
+                        }
+                    </Masonry>
+                </ResponsiveMasonry>
             </div>
         </div>
     )
