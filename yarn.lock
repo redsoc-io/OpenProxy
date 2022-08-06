@@ -398,6 +398,11 @@
   "resolved" "https://registry.npmjs.org/core-js-pure/-/core-js-pure-3.24.1.tgz"
   "version" "3.24.1"
 
+"country-flag-icons@^1.5.5":
+  "integrity" "sha512-k4WXZ/WvWOSiYXRG1n8EYHNr1m/IX0GffKqAidaet5DrJsDOmJ8Q/8JvvONhZNnKYg24s4lvsm+9og1HcuIU/g=="
+  "resolved" "https://registry.npmjs.org/country-flag-icons/-/country-flag-icons-1.5.5.tgz"
+  "version" "1.5.5"
+
 "cross-spawn@^7.0.2":
   "integrity" "sha512-iRDPJKUPVEND7dHPO8rkbOnPpyDygcDFtWjpeWNCgy8WP2rXcxXL8TskReQl6OrB2G7+UJrags1q15Fudc7G6w=="
   "resolved" "https://registry.npmjs.org/cross-spawn/-/cross-spawn-7.0.3.tgz"
@@ -1598,12 +1603,17 @@
     "loose-envify" "^1.1.0"
     "scheduler" "^0.23.0"
 
+"react-icons@^4.4.0":
+  "integrity" "sha512-fSbvHeVYo/B5/L4VhB7sBA1i2tS8MkT0Hb9t2H1AVPkwGfVHLJCqyr2Py9dKMxsyM63Eng1GkdZfbWj+Fmv8Rg=="
+  "resolved" "https://registry.npmjs.org/react-icons/-/react-icons-4.4.0.tgz"
+  "version" "4.4.0"
+
 "react-is@^16.13.1":
   "integrity" "sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ=="
   "resolved" "https://registry.npmjs.org/react-is/-/react-is-16.13.1.tgz"
   "version" "16.13.1"
 
-"react@^16.8.0 || ^17.0.0 || ^18.0.0", "react@^17.0.2 || ^18.0.0-0", "react@^18.2.0", "react@>= 16.8.0 || 17.x.x || ^18.0.0-0", "react@18.2.0":
+"react@*", "react@^16.8.0 || ^17.0.0 || ^18.0.0", "react@^17.0.2 || ^18.0.0-0", "react@^18.2.0", "react@>= 16.8.0 || 17.x.x || ^18.0.0-0", "react@18.2.0":
   "integrity" "sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ=="
   "resolved" "https://registry.npmjs.org/react/-/react-18.2.0.tgz"
   "version" "18.2.0"
