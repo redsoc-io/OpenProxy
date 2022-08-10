@@ -3,6 +3,7 @@ import getUnicodeFlagIcon from 'country-flag-icons/unicode'
 import { ImSpinner8 } from 'react-icons/im'
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry"
 const lookup = require('country-code-lookup')
+import Head from "next/head";
 
 function Th({ children }) {
     return (
@@ -30,6 +31,9 @@ function ServerDisplay({ server }) {
 
     return (
         <div className="server p-3">
+            <Head>
+                <title>OProxy: Servers</title>
+            </Head>
             <div className="shadow-md rounded-md overflow-hidden bg-white border">
                 <div className="flex items-center justify-center bg-gray-300 p-3">
                     <p className="font-bold text-lg text-gray-800">{
