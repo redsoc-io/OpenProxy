@@ -11,7 +11,9 @@
   "dependencies": {
     "country-code-lookup": "^0.0.20",
     "country-flag-icons": "^1.5.5",
+    "https-proxy-agent": "^5.0.1",
     "next": "12.2.4",
+    "node-fetch": "^3.2.10",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-icons": "^4.4.0",
