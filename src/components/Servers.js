@@ -81,27 +81,13 @@ function ServerDisplay({ server }) {
     )
 }
 
-export default function Servers() {
-
-    const [servers, setServers] = useState([]);
-    const [loading, setLoading] = useState(true);
+export default function Servers({ servers = [] }) {
 
     const [sort, setSort] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
     const [filterCountry, setFilterCountry] = useState("");
     const [filterPrivate, setFilterPrivate] = useState(false);
     const [filterProtocol, setFilterProtocol] = useState("");
-
-    useEffect(() => {
-        fetch("/api/servers")
-            .then(res => res.json())
-            .then(
-                json => {
-                    setServers(json)
-                    setLoading(false)
-                }
-            );
-    }, []);
 
     const filtered = (sort ?
         servers.sort((a, b) => b.speed_score - a.speed_score)
@@ -129,8 +115,8 @@ export default function Servers() {
     return (
         <div>
             <div className="w-full py-5 px-4">
-                <div className="w-full bg-white flex">
-                    <div className="w-2/5">
+                <div className="w-full bg-white flex lg:flex-nowrap flex-wrap">
+                    <div className="lg:w-2/5 w-full">
                         <div className="p-3">
                             <input type="text"
                                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -138,7 +124,7 @@ export default function Servers() {
                             />
                         </div>
                     </div>
-                    <div className="w-1/5">
+                    <div className="w-2/5 lg:1/5">
                         <div className="p-3">
                             <select
                                 className="w-full px-3 p-2 bg-gray-200 rounded-md shadow border text-gray-700"
@@ -161,7 +147,7 @@ export default function Servers() {
                             </select>
                         </div>
                     </div>
-                    <div className="w-1/5">
+                    <div className="w-2/5 lg:1/5">
                         <div className="p-3">
                             <select
                                 className="w-full px-3 p-2 bg-gray-200 rounded-md shadow border text-gray-700"
@@ -184,7 +170,7 @@ export default function Servers() {
                             </select>
                         </div>
                     </div>
-                    <div>
+                    <div className="lg:w-auto w-1/5">
                         <div className="p-3 select-none">
                             <input type="checkbox" onChange={(e) => setFilterPrivate(e.target.checked)} id="private-filter" />
                             {" "}
@@ -194,14 +180,6 @@ export default function Servers() {
                 </div>
             </div>
             <div className="p-4 w-full">
-                {
-                    loading &&
-                    <div className="w-full h-full flex items-center justify-center mt-12">
-                        <div className="spinner animate-spin h-5 w-5 flex items-center justify-center text-5xl">
-                            <ImSpinner8 />
-                        </div>
-                    </div>
-                }
                 <ResponsiveMasonry
                     columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 3 }}
                 >
