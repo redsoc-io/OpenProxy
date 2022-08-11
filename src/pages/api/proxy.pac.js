@@ -26,7 +26,7 @@ async function test_proxy(url) {
 
 export default async function handler(req, res) {
     const { filter_country, filter_proto } = req.query;
-    const request = await fetch(`https://api.oproxy.ml/servers`);
+    const request = await fetch(`https://openproxyproject.web.app/servers.json`);
     var data = await request.json()
     var filter = data
     if (filter_country) {
