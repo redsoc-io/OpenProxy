@@ -141,9 +141,8 @@ export default function Servers({ }) {
     useEffect(() => {
         fetch("/api/servers").then(res => res.json()).then(data => {
             setServers(data);
-        }
-        )
-    }, [servers]);
+        })
+    }, []);
 
 
     const filtered = (sort ?
