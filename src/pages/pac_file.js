@@ -40,6 +40,7 @@ export default function PacFile() {
                             href="https://www.websense.com/content/support/library/web/v76/pac_file_best_practices/PAC_explained.aspx#:~:text=PAC%20files%20are%20used%20to,easy%20to%20create%20and%20maintain."
                             target={"_blank"}
                             className="hover:text-blue-700"
+                            rel="noreferrer"
                         >
                             * Click here for more info about PAC Files
                         </a>
