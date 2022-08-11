@@ -4,12 +4,13 @@ import { useState, useEffect } from "react";
 function NavLink({ children, href = "/" }) {
     return (
         <Link href={href}>
-            <a className="inline-block p-3 font-bold text-decoration-none hover:underline">
+            <a className="inline-block p-5 text-gray-800 tracking-wide font-bold text-decoration-none hover:underline hover:bg-gray-100">
                 {children}
             </a>
         </Link>
     )
 }
+
 function toBeautyString(then) {
 
     var nowdate = new Date();
@@ -114,16 +115,25 @@ function Updated() {
 
 export default function Nav() {
     return (
-        <nav className="flex items-center w-full justify-between px-4">
-            <div>
-                <ul>
-                    <NavLink href="/">Servers</NavLink>
-                    <NavLink href="/log">Last Log</NavLink>
-                </ul>
-            </div>
-            <div>
-                <Updated />
-            </div>
-        </nav>
+        <>
+            <nav className="flex items-center w-full justify-between px-4 bg-gray-50 shadow-lg fixed top-0">
+                <div className="flex items-center justify-center">
+                    <div className="uppercase font-bold tracking-wide text-blue-900 mr-5">
+                        OProxy.ml
+                    </div>
+                    <div>
+                        <ul>
+                            <NavLink href="/">Servers</NavLink>
+                            <NavLink href="/log">Last Log</NavLink>
+                            <NavLink href="/pac_file">PAC File</NavLink>
+                        </ul>
+                    </div>
+                </div>
+                <div className="">
+                    <Updated />
+                </div>
+            </nav>
+            <div className="py-12"></div>
+        </>
     );
 }
