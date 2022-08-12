@@ -1,9 +1,13 @@
+import Head from 'next/head';
 import Nav from '../components/Nav';
 
 export default function PacFile() {
     return (
         <div>
             <Nav />
+            <Head>
+                <title>OProxy: Proxy Auto Configuration File</title>
+            </Head>
             <div className='text-center py-3'>
                 <h1 className='text-3xl font-black py-12'>Proxy Auto Configuration (PAC) File</h1>
             </div>
