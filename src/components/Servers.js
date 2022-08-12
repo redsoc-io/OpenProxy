@@ -95,10 +95,10 @@ function ServerDisplay({ server, grid = false }) {
             <tr>
                 <Td>
                     <p className="font-bold text-lg text-gray-800">{
-                        getUnicodeFlagIcon(server.data.country)}{" "}
-                        {server.data.city},{" "}
+                        getUnicodeFlagIcon(server.data?.country)}{" "}
+                        {server.data?.city},{" "}
                         {
-                            (lookup.byIso(server.data.country) || {}).country
+                            (lookup.byIso(server.data?.country) || {}).country
                         }
                     </p>
                 </Td>
@@ -115,7 +115,7 @@ function ServerDisplay({ server, grid = false }) {
                 </Td>
                 <Td>
                     <p className="font-bold text-lg text-gray-800">
-                        {server.data.asn.name}
+                        {server.data?.asn?.name}
                     </p>
                 </Td>
                 <Td>
