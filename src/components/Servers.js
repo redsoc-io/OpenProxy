@@ -184,7 +184,7 @@ export default function Servers({ }) {
                                 />
                             </div>
                         </div>
-                        <div className="w-2/5 lg:1/5">
+                        <div className="w-1/2 lg:1/5">
                             <div className="p-3">
                                 <select
                                     className="w-full px-3 p-2 bg-gray-200 rounded-md shadow border text-gray-700"
@@ -207,7 +207,7 @@ export default function Servers({ }) {
                                 </select>
                             </div>
                         </div>
-                        <div className="w-2/5 lg:1/5">
+                        <div className="w-1/2 lg:1/5">
                             <div className="p-3">
                                 <select
                                     className="w-full px-3 p-2 bg-gray-200 rounded-md shadow border text-gray-700"

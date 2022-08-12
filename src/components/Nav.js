@@ -116,7 +116,7 @@ function Updated() {
 export default function Nav() {
     return (
         <>
-            <nav className="flex items-center flex-wrap w-full justify-between px-4 bg-gray-50 shadow-lg lg:fixed top-0">
+            <nav className="flex items-center flex-wrap w-full justify-between px-4 bg-gray-50 border lg:border-none lg:shadow-lg lg:fixed top-0">
                 <div className="flex items-center justify-center flex-wrap">
                     <div className="uppercase font-bold tracking-wide text-blue-900 lg:mr-5 lg:p-0 p-3">
                         OProxy.ml
