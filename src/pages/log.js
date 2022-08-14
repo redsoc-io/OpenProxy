@@ -4,7 +4,7 @@ import Head from "next/head";
 import { io } from "socket.io-client"
 
 export default function LogPage() {
-    const [log, setLog] = useState([]);
+    const [log, setLog] = useState(["Loading..."]);
     const listening = false
     const startlistening = () => {
         listening = true;
