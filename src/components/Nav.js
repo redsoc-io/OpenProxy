@@ -124,7 +124,7 @@ export default function Nav() {
                     <div>
                         <ul>
                             <NavLink href="/">Servers</NavLink>
-                            <NavLink href="/log">Last Log</NavLink>
+                            <NavLink href="/log">Live Log</NavLink>
                             <NavLink href="/pac_file">PAC File</NavLink>
                             <NavLink href="/about">About</NavLink>
                         </ul>

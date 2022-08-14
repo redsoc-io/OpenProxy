@@ -20,6 +20,8 @@
     "react-icons": "^4.4.0",
     "react-markdown": "^8.0.3",
     "react-responsive-masonry": "^2.1.5",
+    "socket.io": "^4.5.1",
+    "socket.io-client": "^4.5.1",
     "star-markdown-css": "^0.4.0",
     "utf8": "^3.0.0"
   },
