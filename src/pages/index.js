@@ -1,5 +1,5 @@
 import Nav from '../components/Nav';
-import Servers from '../components/Servers';
+import Servers from '../components/Servers/Servers';
 
 export default function Index() {
   return (

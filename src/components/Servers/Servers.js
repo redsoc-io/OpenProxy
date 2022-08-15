@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import getUnicodeFlagIcon from 'country-flag-icons/unicode'
-import { CgSpinner } from 'react-icons/cg'
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry"
 const lookup = require('country-code-lookup')
-import { BsUiChecksGrid, BsViewList } from "react-icons/bs"
+import { BsStar, BsStarFill, BsUiChecksGrid, BsViewList } from "react-icons/bs"
 import Head from "next/head";
+import { toBeautyString } from "../../assets/misc";
+import LoaderLimit from "./LoaderLimit";
 
 function Th(props) {
     const { children, className } = props;
@@ -94,6 +95,12 @@ function ServerDisplay({ server, grid = false }) {
         return (
             <tr>
                 <Td>
+                    <p className={`flex items-center justify-center font-bold text-lg bg-blue-600 text-gray-800 rounded-md text-center text-white font-bold`}>
+                        <span className="mr-1">{server.streak}</span>
+                        <span><BsStarFill /></span>
+                    </p>
+                </Td>
+                <Td>
                     <p className="font-bold text-lg text-gray-800">{
                         getUnicodeFlagIcon(server.data?.country)}{" "}
                         {server.data?.city},{" "}
@@ -123,51 +130,94 @@ function ServerDisplay({ server, grid = false }) {
                         {server.private ? "Yes" : "No"}
                     </p>
                 </Td>
+                <Td>
+                    <Updated updated={server.updated_at} />
+                </Td>
             </tr>
         )
+}
+
+
+function Updated({ updated }) {
+    const [date, setDate] = useState(new Date());
+    function update_time() {
+        setDate(new Date());
+    }
+
+    useEffect(() => {
+        update_time()
+        setInterval(() => {
+            update_time()
+        }, 10000);
+    }, []);
+
+    return (
+        <div>
+            <>
+
+                {toBeautyString(new Date(updated), date)}
+
+            </>
+        </div>
+    )
 }
 
 export default function Servers({ }) {
 
     const [sort, setSort] = useState(true);
-    const [searchTerm, setSearchTerm] = useState("");
+    const [query, setSearchQuery] = useState("");
     const [filterCountry, setFilterCountry] = useState("");
     const [filterPrivate, setFilterPrivate] = useState(false);
     const [filterProtocol, setFilterProtocol] = useState("");
+    const [page, setPage] = useState(0);
     const [grid, setGrid] = useState(false);
+    const [nomore, setNotMore] = useState(false);
 
-    const [servers, setServers] = useState([]);
+    const [protocols, setProtocols] = useState([]);
+    const [countries, setCountries] = useState([]);
+    const [data, setData] = useState({});
 
     useEffect(() => {
-        fetch("/api/servers").then(res => res.json()).then(data => {
-            setServers(data);
+        fetch("https://api.oproxy.ml/countries").then(res => res.json()).then(data => {
+            setCountries(data);
         })
-    }, []);
+        fetch("https://api.oproxy.ml/protocols").then(res => res.json()).then(data => {
+            setProtocols(data);
+        })
+    }, [data])
 
 
-    const filtered = (sort ?
-        servers.sort((a, b) => b.speed_score - a.speed_score)
-        :
-        servers
-    )
-        .filter(server => {
-            return JSON.stringify(server).toLowerCase().includes(searchTerm.toLowerCase())
+    useEffect(() => {
+        const api_url = new URL("https://api.oproxy.ml/servers")
+        const params = new URLSearchParams();
+
+        if (query) params.append("q", query);
+        if (filterCountry) params.append("country", filterCountry);
+        if (filterPrivate) params.append("private", filterPrivate);
+        if (filterProtocol) params.append("proto", filterProtocol);
+        if (sort) params.append("sort", "speed");
+        if (page) params.append("page", page);
+
+        api_url.search = params.toString();
+        const url = api_url.toString();
+        fetch(url).then(res => res.json()).then(fetched_data => {
+            const new_data = {
+                alive_count: fetched_data.alive_count,
+                servers: [...(data?.servers || []), ...fetched_data.servers],
+            };
+            setData(new_data);
         })
-        .filter(server => {
-            return server.proto.toLowerCase().includes(filterProtocol.toLowerCase())
-        })
-        .filter(server => {
-            return server.data.country.toLowerCase().includes(filterCountry.toLowerCase())
-        })
-        .filter(
-            server => {
-                if (filterPrivate) {
-                    return server.private
-                } else {
-                    return true
-                }
-            }
-        )
+    }, [query, filterCountry, filterPrivate, filterProtocol, page]);
+
+    useEffect(() => {
+        setData([]);
+        setNotMore(false);
+    }, [query, filterCountry, filterPrivate, filterProtocol]);
+
+    var filtered = data["servers"]
+
+    var timeout_var = null;
+
     return (
         <div>
             <Head>
@@ -179,8 +229,15 @@ export default function Servers({ }) {
                         <div className="lg:w-2/5 w-full">
                             <div className="p-3">
                                 <input type="text"
-                                    onChange={(e) => setSearchTerm(e.target.value)}
-                                    className="w-full px-3 p-2 bg-gray-200 rounded-md shadow border text-gray-700" placeholder={`Search in ${servers.length} servers`}
+                                    onChange={(e) => {
+                                        if (timeout_var) clearTimeout(timeout_var);
+                                        timeout_var = setTimeout(() => {
+                                            setSearchQuery(e.target.value)
+                                        }, 1000)
+                                    }}
+                                    className="w-full px-3 p-2 bg-gray-200 rounded-md shadow border text-gray-700"
+                                    placeholder={`Search in ${data["alive_count"] || 0} servers`}
+
                                 />
                             </div>
                         </div>
@@ -192,9 +249,7 @@ export default function Servers({ }) {
                                 >
                                     <option value="">{filterCountry ? "Show All" : "Filter by country"}</option>
                                     {
-                                        [...new Set(servers.map(server => {
-                                            return server.data.country
-                                        }))].sort().map(
+                                        countries.map(
                                             country => {
                                                 return (
                                                     <option value={country} key={`country-filter-${country}`}>
@@ -215,9 +270,7 @@ export default function Servers({ }) {
                                 >
                                     <option value="">{filterProtocol ? "Show All" : "Filter by protocol"}</option>
                                     {
-                                        [...new Set(servers.map(server => {
-                                            return server.proto
-                                        }))].sort().map(
+                                        protocols.map(
                                             proto => {
                                                 return (
                                                     <option value={proto} key={`proto-filter-${proto}`}>
@@ -244,7 +297,7 @@ export default function Servers({ }) {
             </div>
             <div className="w-full flex justify-end px-4">
                 {
-                    servers.length > 0 && (
+                    data.servers && (
                         <button
                             onClick={() => setGrid(!grid)}
                             className="bg-blue-600 text-white font-bold px-3 py-2 rounded-md flex items-center justify-center">
@@ -254,19 +307,8 @@ export default function Servers({ }) {
                     )
                 }
             </div>
-            <div>
-                {
-                    servers.length === 0 && (
-                        <div className="w-full flex justify-center items-center py-6">
-                            <div className="animate-spin h-10 w-10 text-6xl flex items-center justify-center">
-                                <CgSpinner />
-                            </div>
-                        </div>
-                    )
-                }
-            </div>
             <div className="p-4 w-full">
-                {servers.length > 0 &&
+                {data.servers?.length > 0 &&
                     (
                         <>
                             {
@@ -293,43 +335,24 @@ export default function Servers({ }) {
                                             <table className="w-full">
                                                 <thead>
                                                     <tr>
-                                                        <Th>
-                                                            <p className="font-bold text-lg text-gray-800">
-                                                                Country
-                                                            </p>
-                                                        </Th>
-                                                        <Th>
-                                                            <p className="font-bold text-lg text-gray-800">
-                                                                URL
-                                                            </p>
-                                                        </Th>
-                                                        <Th>
-                                                            <p className="font-bold text-lg text-gray-800">
-                                                                Strength
-                                                            </p>
-                                                        </Th>
-                                                        <Th>
-                                                            <p className="font-bold text-lg text-gray-800">
-                                                                Protocol
-                                                            </p>
-                                                        </Th>
-                                                        <Th>
-                                                            <p className="font-bold text-lg text-gray-800">
-                                                                ISP
-                                                            </p>
-                                                        </Th>
-                                                        <Th>
-                                                            <p className="font-bold text-lg text-gray-800">
-                                                                Private
-                                                            </p>
-                                                        </Th>
+                                                        <Th>Alive Streak</Th>
+                                                        <Th>Country</Th>
+                                                        <Th>URL</Th>
+                                                        <Th>Strength</Th>
+                                                        <Th>Protocol</Th>
+                                                        <Th>ISP</Th>
+                                                        <Th>Private </Th>
+                                                        <Th>Updated</Th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     {
                                                         filtered
-                                                            .map(server => {
-                                                                return <ServerDisplay key={server.url} server={server} grid={grid} />
+                                                            .map((server, i) => {
+                                                                return <ServerDisplay key={server.url + `${i}`}
+                                                                    server={server}
+                                                                    grid={grid}
+                                                                />
                                                             })
                                                     }
                                                 </tbody>
@@ -340,6 +363,11 @@ export default function Servers({ }) {
                         </>
                     )
                 }
+                <LoaderLimit
+                    action={() => {
+                        setPage(page + 1)
+                    }}
+                />
             </div>
         </div>
     )
