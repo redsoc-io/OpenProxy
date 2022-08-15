@@ -30,11 +30,11 @@ function Td(props) {
 
 function ServerURL({ url }) {
     return (
-        <div className="text-center py-2">
+        <div className="text-center py-2 h-full">
             <input
                 value={url}
                 readOnly
-                className="text-slate-400 w-full px-3 p-2 bg-gray-200 text-gray-700 w-fit"
+                className="text-slate-400 w-full px-3 p-2 bg-gray-200 text-gray-700 h-full"
             />
         </div>
     )
@@ -101,7 +101,7 @@ function ServerDisplay({ server, grid = false }) {
                     </p>
                 </Td>
                 <Td>
-                    <p className="font-bold text-lg text-gray-800">{
+                    <p className="font-bold text-lg text-gray-800 w-48">{
                         getUnicodeFlagIcon(server.data?.country)}{" "}
                         {server.data?.city},{" "}
                         {
@@ -177,10 +177,13 @@ export default function Servers({ }) {
         fetch("https://api.oproxy.ml/countries").then(res => res.json()).then(data => {
             setCountries(data);
         })
+    }, [data])
+
+    useEffect(() => {
         fetch("https://api.oproxy.ml/protocols").then(res => res.json()).then(data => {
             setProtocols(data);
         })
-    }, [data])
+    }, [])
 
 
     useEffect(() => {
@@ -201,6 +204,7 @@ export default function Servers({ }) {
                 alive_count: fetched_data.alive_count,
                 servers: [...(data?.servers || []), ...fetched_data.servers],
             };
+            setNotMore(fetched_data.servers.length < 10);
             setData(new_data);
         })
     }, [query, filterCountry, filterPrivate, filterProtocol, page]);
@@ -359,11 +363,15 @@ export default function Servers({ }) {
                         </>
                     )
                 }
-                <LoaderLimit
-                    action={() => {
-                        setPage(page + 1)
-                    }}
-                />
+                {
+                    !nomore && (
+                        <LoaderLimit
+                            action={() => {
+                                setPage(page + 1)
+                            }}
+                        />
+                    )
+                }
             </div>
         </div>
     )

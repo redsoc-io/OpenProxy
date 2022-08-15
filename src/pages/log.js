@@ -39,6 +39,6 @@ export default function LogPage() {
                     }
                 </div>
             </div>
-        </div >
+        </div>
     );
 }
