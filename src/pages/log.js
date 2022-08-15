@@ -10,7 +10,6 @@ export default function LogPage() {
         listening = true;
         const socket = io("https://api.oproxy.ml");
         socket.on("receive-message", (line) => {
-            console.log(line)
             setLog(log => [...log, line]);
         });
     }
