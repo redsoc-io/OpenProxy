@@ -121,7 +121,7 @@ function ServerDisplay({ server, grid = false }) {
                     {server.proto}
                 </Td>
                 <Td>
-                    <p className="font-bold text-lg text-gray-800">
+                    <p className="font-bold text-lg text-gray-800 w-48">
                         {server.data?.asn?.name}
                     </p>
                 </Td>
@@ -152,12 +152,8 @@ function Updated({ updated }) {
     }, []);
 
     return (
-        <div>
-            <>
-
-                {toBeautyString(new Date(updated), date)}
-
-            </>
+        <div className="w-24">
+            {toBeautyString(new Date(updated), date)}
         </div>
     )
 }
