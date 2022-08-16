@@ -206,7 +206,7 @@ export default function Servers({ }) {
 
         if (!query) {
             if (filterCountry) params.append("country", filterCountry);
-            if (filterPrivate) params.append("private", filterPrivate);
+            if (filterPrivate) params.append("private_only", filterPrivate);
             if (filterProtocol) params.append("proto", filterProtocol);
             if (sort) params.append("sort", sort);
         }
