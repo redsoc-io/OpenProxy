@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import getUnicodeFlagIcon from 'country-flag-icons/unicode'
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry"
 const lookup = require('country-code-lookup')
-import { BsStar, BsStarFill, BsUiChecksGrid, BsViewList } from "react-icons/bs"
+import { BsStarFill, BsUiChecksGrid, BsViewList } from "react-icons/bs"
 import Head from "next/head";
 import { toBeautyString } from "../../assets/misc";
 import LoaderLimit from "./LoaderLimit";
@@ -34,7 +34,7 @@ function ServerURL({ url }) {
             <input
                 value={url}
                 readOnly
-                className="text-slate-400 w-full px-3 p-2 bg-gray-200 text-gray-700 h-full"
+                className="text-slate-400 w-full px-3 p-2 bg-gray-200 text-gray-700 h-full w-64"
             />
         </div>
     )
@@ -95,7 +95,7 @@ function ServerDisplay({ server, grid = false }) {
         return (
             <tr>
                 <Td>
-                    <p className={`flex items-center justify-center font-bold text-lg bg-blue-600 text-gray-800 rounded-md text-center text-white font-bold`}>
+                    <p className={`flex items-center px-2 justify-center font-bold text-lg bg-blue-600 text-gray-800 rounded-md text-center text-white font-bold`}>
                         <span className="mr-1">{server.streak}</span>
                         <span><BsStarFill /></span>
                     </p>
@@ -160,12 +160,14 @@ function Updated({ updated }) {
 
 export default function Servers({ }) {
 
-    const [sort, setSort] = useState(true);
+    const inputRef = useRef(null);
+
+    const [sort, setSort] = useState("streak");
     const [query, setSearchQuery] = useState("");
     const [filterCountry, setFilterCountry] = useState("");
     const [filterPrivate, setFilterPrivate] = useState(false);
     const [filterProtocol, setFilterProtocol] = useState("");
-    const [page, setPage] = useState(0);
+    const [page, setPage] = useState(-1);
     const [grid, setGrid] = useState(false);
     const [nomore, setNotMore] = useState(false);
 
@@ -186,33 +188,46 @@ export default function Servers({ }) {
     }, [])
 
 
+    function resetData(reset_input = true) {
+        setData({ servers: [] });
+        setPage(-1);
+        setNotMore(false);
+        if (reset_input) {
+            setSearchQuery("");
+            inputRef.current.value = "";
+        }
+    }
+
     useEffect(() => {
         const api_url = new URL("https://api.oproxy.ml/servers")
         const params = new URLSearchParams();
 
         if (query) params.append("q", query);
-        if (filterCountry) params.append("country", filterCountry);
-        if (filterPrivate) params.append("private", filterPrivate);
-        if (filterProtocol) params.append("proto", filterProtocol);
-        if (sort) params.append("sort", "speed");
+
+        if (!query) {
+            if (filterCountry) params.append("country", filterCountry);
+            if (filterPrivate) params.append("private", filterPrivate);
+            if (filterProtocol) params.append("proto", filterProtocol);
+            if (sort) params.append("sort", sort);
+        }
+
         if (page) params.append("page", page);
 
         api_url.search = params.toString();
         const url = api_url.toString();
-        fetch(url).then(res => res.json()).then(fetched_data => {
-            const new_data = {
-                alive_count: fetched_data.alive_count,
-                servers: [...(data?.servers || []), ...fetched_data.servers],
-            };
-            setNotMore(fetched_data.servers.length < 10);
-            setData(new_data);
-        })
-    }, [query, filterCountry, filterPrivate, filterProtocol, page]);
 
-    useEffect(() => {
-        setData([]);
-        setNotMore(false);
-    }, [query, filterCountry, filterPrivate, filterProtocol]);
+        if (page >= 0) {
+            fetch(url).then(res => res.json()).then(fetched_data => {
+                const new_data = {
+                    alive_count: fetched_data.alive_count,
+                    servers: [...(data.servers || []), fetched_data.servers],
+                };
+                setNotMore(fetched_data.servers.length < 10);
+                setData(new_data);
+            })
+        }
+
+    }, [query, filterCountry, filterPrivate, filterProtocol, page, sort]);
 
     var filtered = data["servers"]
 
@@ -232,12 +247,14 @@ export default function Servers({ }) {
                                     onChange={(e) => {
                                         if (timeout_var) clearTimeout(timeout_var);
                                         timeout_var = setTimeout(() => {
+                                            resetData(false);
                                             setSearchQuery(e.target.value)
                                         }, 1000)
                                     }}
                                     className="w-full px-3 p-2 bg-gray-200 rounded-md shadow border text-gray-700"
                                     placeholder={`Search in ${data["alive_count"] || 0} servers`}
-
+                                    defaultValue={query}
+                                    ref={inputRef}
                                 />
                             </div>
                         </div>
@@ -245,7 +262,12 @@ export default function Servers({ }) {
                             <div className="p-3">
                                 <select
                                     className="w-full px-3 p-2 bg-gray-200 rounded-md shadow border text-gray-700"
-                                    onChange={(e) => setFilterCountry(e.target.value)}
+                                    onChange={
+                                        (e) => {
+                                            resetData()
+                                            setFilterCountry(e.target.value)
+                                        }
+                                    }
                                 >
                                     <option value="">{filterCountry ? "Show All" : "Filter by country"}</option>
                                     {
@@ -266,7 +288,12 @@ export default function Servers({ }) {
                             <div className="p-3">
                                 <select
                                     className="w-full px-3 p-2 bg-gray-200 rounded-md shadow border text-gray-700"
-                                    onChange={(e) => setFilterProtocol(e.target.value)}
+                                    onChange={
+                                        (e) => {
+                                            resetData()
+                                            setFilterProtocol(e.target.value)
+                                        }
+                                    }
                                 >
                                     <option value="">{filterProtocol ? "Show All" : "Filter by protocol"}</option>
                                     {
@@ -287,9 +314,25 @@ export default function Servers({ }) {
                     <div className="flex items-center justify-center mt-4 rounded-md">
                         <div className="">
                             <div className="p-3 select-none">
-                                <input type="checkbox" onChange={(e) => setFilterPrivate(e.target.checked)} id="private-filter" />
+                                <input type="checkbox" onChange={(e) => {
+                                    resetData()
+                                    setFilterPrivate(e.target.checked)
+                                }
+                                } id="private-filter" />
                                 {" "}
                                 <label htmlFor="private-filter">Show only private</label>
+                            </div>
+                        </div>
+                        <div className="">
+                            <div className="p-3 select-none">
+                                <input type="checkbox" onChange={
+                                    (e) => {
+                                        resetData()
+                                        setSort(sort === "speed" ? "streak" : "speed")
+                                    }
+                                } id="sort-by-speed" />
+                                {" "}
+                                <label htmlFor="sort-by-speed">Sort by speed</label>
                             </div>
                         </div>
                     </div>
@@ -300,7 +343,8 @@ export default function Servers({ }) {
                     data.servers && (
                         <button
                             onClick={() => setGrid(!grid)}
-                            className="bg-blue-600 text-white font-bold px-3 py-2 rounded-md flex items-center justify-center">
+                            className="bg-blue-600 text-white font-bold px-3 py-2 rounded-md flex items-center justify-center"
+                        >
                             <span className="text-xl mr-2">{!grid ? <BsUiChecksGrid /> : <BsViewList />}</span>
                             <span>Show as {grid ? "List" : "Grid"}</span>
                         </button>
@@ -322,8 +366,14 @@ export default function Servers({ }) {
                                             <Masonry>
                                                 {
                                                     filtered
-                                                        .map(server => {
-                                                            return <ServerDisplay key={server.url} server={server} grid={grid} />
+                                                        .map((server_bulk, i) => {
+                                                            return server_bulk.map(
+                                                                (server, j) => {
+                                                                    return (
+                                                                        <ServerDisplay key={`grid-server-${server.url}-${i}-${j}`} server={server} grid={grid} />
+                                                                    )
+                                                                }
+                                                            )
                                                         })
                                                 }
                                             </Masonry>
@@ -348,11 +398,18 @@ export default function Servers({ }) {
                                                 <tbody>
                                                     {
                                                         filtered
-                                                            .map((server, i) => {
-                                                                return <ServerDisplay key={server.url + `${i}`}
-                                                                    server={server}
-                                                                    grid={grid}
-                                                                />
+                                                            .map((server_bulk, i) => {
+                                                                return server_bulk.map(
+                                                                    (server, j) => {
+                                                                        return (
+                                                                            <ServerDisplay
+                                                                                key={`grid-server-${server.url}-${i}-${j}`}
+                                                                                server={server}
+                                                                                grid={grid}
+                                                                            />
+                                                                        )
+                                                                    }
+                                                                )
                                                             })
                                                     }
                                                 </tbody>
