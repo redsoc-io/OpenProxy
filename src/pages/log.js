@@ -1,16 +1,19 @@
 import Nav from '../components/Nav';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Head from "next/head";
 import { io } from "socket.io-client"
 
 export default function LogPage() {
     const [log, setLog] = useState([]);
+    const divRef = useRef(null);
+
     var listening = false
     const startlistening = () => {
         listening = true;
         const socket = io("https://api.oproxy.ml");
         socket.on("receive-message", (line) => {
             setLog(log => [...log, line]);
+            divRef.current?.scrollIntoView({ behavior: 'smooth' });
         });
     }
 
@@ -37,6 +40,7 @@ export default function LogPage() {
                             )
                         })
                     }
+                    <div className='w-full py-2' ref={divRef}></div>
                 </div>
             </div>
         </div>
