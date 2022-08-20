@@ -12,8 +12,8 @@ export default function LogPage() {
         listening = true;
         const socket = io("https://api.oproxy.ml");
         socket.on("receive-message", (line) => {
-            setLog(log => [...log, line]);
-            divRef.current?.scrollIntoView({ behavior: 'smooth' });
+            setLog(log => [...log, line].slice(-100));
+            divRef.current?.scrollIntoView({  });
         });
     }
 
@@ -31,7 +31,8 @@ export default function LogPage() {
             <Nav />
             <div className='w-full flex items-center justify-center p-3'>
                 <div
-                    className='lg:w-3/4 m-0 p-2 h-screen overflow-scroll w-full bg-white rounded-md text-sm border-2 shadow-md bg-black/70 text-white'
+                    style={{height:"70vh"}}
+                    className='lg:w-3/4 m-0 p-2 overflow-scroll w-full bg-white rounded-md text-sm border-2 shadow-md bg-black/70 text-white'
                 >
                     {
                         (log.length > 0 ? log : ["Logs will load once something is updated in the server..."]).map((line, index) => {
