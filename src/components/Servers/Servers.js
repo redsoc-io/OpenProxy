@@ -161,8 +161,9 @@ function Updated({ updated }) {
 export default function Servers({ }) {
 
     const inputRef = useRef(null);
+    const [loading, setLoading] = useState(false)
 
-    const [sort, setSort] = useState("streak");
+    const [sort, setSort] = useState("");
     const [query, setSearchQuery] = useState("");
     const [filterCountry, setFilterCountry] = useState("");
     const [filterPrivate, setFilterPrivate] = useState(false);
@@ -189,7 +190,7 @@ export default function Servers({ }) {
 
 
     function resetData(reset_input = true) {
-        setData({ servers: [] });
+        setData({ servers: [], alive_count:(data.alive_count || 0) });
         setPage(-1);
         setNotMore(false);
         if (reset_input) {
@@ -211,12 +212,13 @@ export default function Servers({ }) {
             if (sort) params.append("sort", sort);
         }
 
-        if (page) params.append("page", page);
+        if (page >= 0) params.append("page", page);
 
         api_url.search = params.toString();
         const url = api_url.toString();
 
-        if (page >= 0) {
+        if (page >= 0 && !loading) {
+            setLoading(true)
             fetch(url).then(res => res.json()).then(fetched_data => {
                 const new_data = {
                     alive_count: fetched_data.alive_count,
@@ -224,6 +226,7 @@ export default function Servers({ }) {
                 };
                 setNotMore(fetched_data.servers.length < 10);
                 setData(new_data);
+                setLoading(false)
             })
         }
 
@@ -323,16 +326,22 @@ export default function Servers({ }) {
                                 <label htmlFor="private-filter">Show only private</label>
                             </div>
                         </div>
-                        <div className="">
-                            <div className="p-3 select-none">
-                                <input type="checkbox" onChange={
-                                    (e) => {
-                                        resetData()
-                                        setSort(sort === "speed" ? "streak" : "speed")
-                                    }
-                                } id="sort-by-speed" />
-                                {" "}
-                                <label htmlFor="sort-by-speed">Sort by speed</label>
+                        <div className="flex items-center justify-center">
+                            <span className="px-3">Sort</span>
+                            <div className="">
+                                    <select
+                                        className="w-full px-3 p-2 bg-gray-200 rounded-md shadow border text-gray-700"
+                                        onChange={
+                                            ({target}) => {
+                                                resetData()
+                                                setSort(target.value)
+                                            }
+                                        }
+                                    >
+                                        <option value="updated_at">Updated</option>
+                                        <option value="speed_score">Speed</option>
+                                        <option value="streak">Streak</option>
+                                    </select>
                             </div>
                         </div>
                     </div>
