@@ -5,9 +5,10 @@ const axios = require("axios");
 const { SocksProxyAgent } = require("socks-proxy-agent");
 const HttpsProxyAgent = require("https-proxy-agent");
 
+var url =
+  "https://github.com/jamesward/play-load-tests/raw/master/public/1mb.txt";
+
 export default async function downloadFileWithProxy(proxyUrl) {
-  var url =
-    "https://github.com/jamesward/play-load-tests/raw/master/public/1mb.txt";
   let agent;
   if (proxyUrl.startsWith("socks")) {
     agent = new SocksProxyAgent(proxyUrl);
@@ -20,10 +21,10 @@ export default async function downloadFileWithProxy(proxyUrl) {
   return new Promise(async (resolve, reject) => {
     setTimeout(() => {
       reject("Timeout!");
-    }, 6000);
-    const start = Date.now();
+    }, 4000);
 
-    let response = null;
+    let response = null,
+      start = Date.now();
 
     try {
       response = await axios({
