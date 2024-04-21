@@ -6,15 +6,18 @@ export default async function handler(req, res) {
     const host_base = req.headers.host;
     const base_url = `${protocol}://${host_base}`;
 
+    let resp = {};
+
     try {
-      await axios.get(`${base_url}/api/update`);
+      const { data } = await axios.get(`${base_url}/api/update`);
+      resp = data;
     } catch (e) {
       console.log(e);
     }
-
     res.status(200).json({
       base_url,
       time: new Date(),
+      ...resp,
     });
   } catch (e) {
     console.log(e);
