@@ -7,10 +7,10 @@
   ],
   "functions": {
     "pages/api/cron.js": {
-      "maxDuration": 15
+      "maxDuration": 10
     },
     "pages/api/update.js": {
-      "maxDuration": 15
+      "maxDuration": 10
     }
   }
 }
