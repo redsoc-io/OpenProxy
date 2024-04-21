@@ -1,0 +1,19 @@
+[
+    {
+        "url": 
+    "https://raw.githubusercontent.com/monosans/proxy-list/main/proxies_anonymous/all.txt",
+    "type": "all"
+    },
+    {
+        "url": "https://raw.githubusercontent.com/ErcinDedeoglu/proxies/main/proxies/http.txt",
+        "type": "http"
+    },
+    {
+        "url": "https://raw.githubusercontent.com/ErcinDedeoglu/proxies/main/proxies/socks4.txt",
+        "type": "socks4"
+    },
+    {
+        "url": "https://raw.githubusercontent.com/ErcinDedeoglu/proxies/main/proxies/socks5.txt",
+        "type": "socks5"
+    }
+]
