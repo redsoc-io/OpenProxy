@@ -1,6 +1,6 @@
 import db from "../../lib/mongo";
 import downloadFileWithProxy from "../../lib/proxyDownload";
-const n = 500;
+const n = 200;
 
 export default async function handler(req, res) {
   const mg = await db();
