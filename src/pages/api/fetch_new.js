@@ -48,7 +48,6 @@ export default async function handler(req, res) {
       tested: 0,
       response_time: 0,
       working: false,
-      bandwidth: 0,
     };
   });
 
