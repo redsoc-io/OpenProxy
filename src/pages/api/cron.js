@@ -1,26 +1,24 @@
 import axios from "axios";
-let running = false;
+
+function resend() {
+  setTimeout(() => {
+    try {
+      axios.get(`${base_url}/api/cron`);
+    } catch (e) {
+      console.log(e);
+      resend();
+    }
+  }, 8000);
+}
 
 export default async function handler(req, res) {
-  if (running) {
-    return;
-  }
-  running = true;
-
   try {
     const protocol = req.connection.encrypted ? "https" : "http";
     const host_base = req.headers.host;
     const base_url = `${protocol}://${host_base}`;
 
-    setTimeout(() => {
-      try {
-        axios.get(`${base_url}/api/cron`);
-      } catch (e) {
-        console.log(e);
-      }
-    }, 8000);
-
     try {
+      resend();
       await axios.get(`${base_url}/api/update`);
     } catch (e) {
       console.log(e);
@@ -33,6 +31,4 @@ export default async function handler(req, res) {
   } catch (e) {
     console.log(e);
   }
-
-  running = false;
 }
