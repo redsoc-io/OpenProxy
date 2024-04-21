@@ -6,10 +6,10 @@
     }
   ],
   "functions": {
-    "api/cron.js": {
+    "api/cron": {
       "maxDuration": 10
     },
-    "api/update.js": {
+    "api/update": {
       "maxDuration": 10
     }
   }
