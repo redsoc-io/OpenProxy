@@ -19,9 +19,7 @@ export default async function handler(req, res) {
       time: new Date(),
     });
 
-    setTimeout(() => {
-      axios.get(`${base_url}/api/cron`);
-    }, 2000);
+    axios.get(`${base_url}/api/cron`);
   } catch (e) {
     console.log(e);
   }
