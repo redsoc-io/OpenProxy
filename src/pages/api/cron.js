@@ -12,14 +12,16 @@ export default async function handler(req, res) {
     const host_base = req.headers.host;
     const base_url = `${protocol}://${host_base}`;
 
+    setTimeout(() => {
+      axios.get(`${base_url}/api/cron`);
+    }, 8000);
+
     await axios.get(`${base_url}/api/update`);
 
     res.status(200).json({
       base_url,
       time: new Date(),
     });
-
-    axios.get(`${base_url}/api/cron`);
   } catch (e) {
     console.log(e);
   }
