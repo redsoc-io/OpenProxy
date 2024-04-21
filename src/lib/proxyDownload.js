@@ -20,7 +20,7 @@ export default async function downloadFileWithProxy(proxyUrl) {
   return new Promise(async (resolve, reject) => {
     setTimeout(() => {
       reject("Timeout!");
-    }, 10000);
+    }, 6000);
     const start = Date.now();
 
     let response = null;
