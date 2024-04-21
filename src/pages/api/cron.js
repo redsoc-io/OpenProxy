@@ -1,5 +1,5 @@
 import axios from "axios";
-
+export const maxDuration = 30;
 let running = false;
 
 export default async function handler(req, res) {
