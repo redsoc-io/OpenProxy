@@ -18,10 +18,12 @@ export default async function handler(req, res) {
       doc.tested = 1;
       doc.response_time = test_results.responseTime;
       doc.working = true;
+      doc.streak = (doc.streak || 0) + 1;
     } catch (e) {
       doc.last_checked = new Date();
       doc.tested = 1;
       doc.working = false;
+      doc.streak = 0;
       //console.log(e);
     }
     return doc;
@@ -39,7 +41,9 @@ export default async function handler(req, res) {
 
   const dbWriteTime = new Date();
 
-  const set = await mg.bulkWrite(bulkUpdateOperations);
+  if (bulkUpdateOperations.length > 0) {
+    const set = await mg.bulkWrite(bulkUpdateOperations);
+  }
 
   const dbWriteEndTime = new Date();
 

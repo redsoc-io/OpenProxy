@@ -4,7 +4,13 @@ const n = 500;
 
 export default async function handler(req, res) {
   const mg = await db();
-  const docs = await mg.find().sort({ last_checked: 1 }).limit(n).toArray();
+  const docs = await mg
+    .find({
+      working: false,
+    })
+    .sort({ last_checked: 1 })
+    .limit(n)
+    .toArray();
   const startTime = new Date();
 
   var test = docs.map(async (doc) => {
@@ -35,7 +41,9 @@ export default async function handler(req, res) {
 
   const dbWriteTime = new Date();
 
-  const set = await mg.bulkWrite(bulkUpdateOperations);
+  if (bulkUpdateOperations.length > 0) {
+    const set = await mg.bulkWrite(bulkUpdateOperations);
+  }
 
   const dbWriteEndTime = new Date();
 
