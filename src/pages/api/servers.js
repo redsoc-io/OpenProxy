@@ -1,6 +1,4 @@
 import db from "../../lib/mongo";
-const geoip = require("geoip-lite");
-
 function extractIpAddress(urlText) {
   var ipRegex = /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/g;
   var ipAddresses = urlText.match(ipRegex);
