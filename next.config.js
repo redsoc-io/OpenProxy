@@ -3,8 +3,14 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-  experimental: {
-    serverComponentsExternalPackages: ["geoip-lite"],
+  webpack: (config, options) => {
+    if (!config.externals) {
+      config.externals = [];
+    }
+
+    config.externals = ["geoip-lite", ...config.externals];
+
+    return config;
   },
 };
 

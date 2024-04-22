@@ -12,7 +12,7 @@ export default async function handler(req, res) {
   var servers = await col
     .find({ working: true })
     .sort({
-      streak: -1,
+      last_checked: -1,
     })
     .toArray();
   servers.map((server) => {
