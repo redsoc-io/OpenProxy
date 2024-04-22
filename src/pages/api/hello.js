@@ -1,5 +1,8 @@
 export default async function handler(req, res) {
   const { from } = req.query;
-  console.log(`Hello from ${from}`);
-  res.status(200).json({ from: from || "???" });
+
+  const country = req.headers["X-Vercel-IP-Country"];
+
+  console.log(`Hello from ${country || "??"} by ${from}`);
+  res.status(200).json({ from: from || "???", country: country || "??" });
 }

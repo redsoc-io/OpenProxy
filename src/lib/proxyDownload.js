@@ -37,8 +37,9 @@ export default async function downloadFileWithProxy(proxyUrl) {
       return;
     }
 
+    const { country } = response.data;
     const responseTime = Date.now() - start;
 
-    resolve({ responseTime });
+    resolve({ responseTime, country });
   });
 }

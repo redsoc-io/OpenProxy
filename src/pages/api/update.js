@@ -20,6 +20,7 @@ export default async function handler(req, res) {
       doc.tested = 1;
       doc.response_time = test_results.responseTime;
       doc.working = true;
+      doc.geo = test_results.country;
     } catch (e) {
       doc.last_checked = new Date();
       doc.tested = 1;

@@ -15,11 +15,6 @@ export default async function handler(req, res) {
       last_checked: -1,
     })
     .toArray();
-  servers.map((server) => {
-    const ip = extractIpAddress(server.url);
-    const lookup = geoip.lookup(ip).country;
-    server.geo = lookup;
-  });
   console.log(`Total Available: ${servers.length}`);
   res.status(200).json(servers);
 }
