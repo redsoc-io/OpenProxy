@@ -46,6 +46,7 @@ async function get_new_servers() {
   dat = new Set(dat);
   dat = Array.from(dat);
   len = len - dat.length;
+  console.log(`Removed ${len} duplicates from the list.`);
 
   var insert = dat.map(async (server) => {
     const hash = sha2hash(server);
@@ -56,6 +57,8 @@ async function get_new_servers() {
       tested: 0,
       response_time: 0,
       working: false,
+      streak: 0,
+      addedOn: new Date(),
     };
   });
 
