@@ -8,5 +8,6 @@ export default async function handler(req, res) {
       last_checked: -1,
     })
     .toArray();
+  console.log(`Total Available: ${servers.length}`);
   res.status(200).json(servers);
 }
