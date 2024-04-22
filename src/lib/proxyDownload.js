@@ -17,7 +17,7 @@ export default async function downloadFileWithProxy(proxyUrl) {
   return new Promise(async (resolve, reject) => {
     setTimeout(() => {
       reject("Timeout!");
-    }, 6500);
+    }, 7000);
 
     let response = null,
       start = Date.now();
@@ -38,6 +38,7 @@ export default async function downloadFileWithProxy(proxyUrl) {
     }
 
     const { country } = response.data;
+    console.log(country);
     const responseTime = Date.now() - start;
 
     resolve({ responseTime, country });
