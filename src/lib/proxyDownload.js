@@ -2,7 +2,7 @@ const axios = require("axios");
 const { SocksProxyAgent } = require("socks-proxy-agent");
 const HttpsProxyAgent = require("https-proxy-agent");
 
-var url = "https://google.com/";
+var url = "https://open-proxy.vercel.app/api/hello";
 
 export default async function downloadFileWithProxy(proxyUrl) {
   let agent;
@@ -25,7 +25,7 @@ export default async function downloadFileWithProxy(proxyUrl) {
     try {
       response = await axios({
         method: "GET",
-        url: url,
+        url: `${url}?from=${proxyUrl}`,
         httpAgent: agent,
         httpsAgent: agent,
       });

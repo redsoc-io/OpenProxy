@@ -14,12 +14,10 @@ export default async function handler(req, res) {
       doc.tested = 1;
       doc.response_time = test_results.responseTime;
       doc.working = true;
-      console.log("Working: ", doc.url);
     } catch (e) {
       doc.last_checked = new Date();
       doc.tested = 1;
       doc.working = false;
-      console.log("Error: ", doc.url);
       //console.log(e);
     }
     return doc;
@@ -42,6 +40,9 @@ export default async function handler(req, res) {
   const dbWriteEndTime = new Date();
 
   const working = test.filter((t) => t.working);
+
+  console.log(`Working: ${working.length}`);
+  console.log(`Tested: ${test.length}`);
 
   res.status(200).json({
     working: working.length,
