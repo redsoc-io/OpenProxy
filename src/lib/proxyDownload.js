@@ -1,6 +1,3 @@
-import { time } from "console";
-
-const fs = require("fs");
 const axios = require("axios");
 const { SocksProxyAgent } = require("socks-proxy-agent");
 const HttpsProxyAgent = require("https-proxy-agent");
@@ -40,8 +37,7 @@ export default async function downloadFileWithProxy(proxyUrl) {
       return;
     }
 
-    const end = Date.now();
-    const responseTime = end - start;
+    const responseTime = Date.now() - start;
 
     resolve({ responseTime });
   });
