@@ -21,10 +21,9 @@ async function updateAll(days = 7) {
       const test_results = await downloadFileWithProxy(doc.url);
       doc.last_checked = new Date();
       doc.tested = 1;
-      doc.response_time = test_results.responseTime;
       doc.working = true;
-      doc.geo = test_results.country;
       doc.lastOnline = new Date();
+      doc = { ...doc, ...test_results };
     } catch (e) {
       doc.last_checked = new Date();
       doc.tested = 1;

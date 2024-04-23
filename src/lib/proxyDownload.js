@@ -28,6 +28,9 @@ async function downloadFileWithProxy(proxyUrl) {
         url: `${url}`,
         httpAgent: agent,
         httpsAgent: agent,
+        onUploadProgress: (progressEvent) => {
+          console.log(progressEvent);
+        },
       });
     } catch (e) {
       reject(e);
@@ -40,11 +43,11 @@ async function downloadFileWithProxy(proxyUrl) {
 
     const { data } = response;
 
-    const country = data.split("\n")[2];
+    const geo = data.split("\n")[2];
 
-    const responseTime = Date.now() - start;
+    const response_time = Date.now() - start;
 
-    resolve({ responseTime, country });
+    resolve({ response_time, geo });
   });
 }
 
