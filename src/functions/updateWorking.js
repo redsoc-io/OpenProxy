@@ -9,6 +9,11 @@ async function updateWorking() {
     .find({ working: true, last_checked: { $lt: thresholdTime } })
     .limit(n)
     .toArray();
+
+  if (docs.length === 0) {
+    return {};
+  }
+
   const startTime = new Date();
 
   var test = docs.map(async (doc) => {

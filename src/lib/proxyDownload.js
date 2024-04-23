@@ -33,16 +33,13 @@ async function downloadFileWithProxy(proxyUrl) {
       reject(e);
     }
 
-    if (response === null) {
-      return;
+    if (response === null || response.status !== 200) {
+      reject("Invalid response");
     }
 
     const { data } = response;
 
     const country = data.countryCode;
-
-    console.log(`Country: ${country}`);
-
     const responseTime = Date.now() - start;
 
     resolve({ responseTime, country });
