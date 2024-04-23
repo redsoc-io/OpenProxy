@@ -3,7 +3,15 @@ import db from "../../lib/mongo";
 export default async function handler(req, res) {
   const col = await db();
   var servers = await col
-    .find({ working: true })
+    .find(
+      { working: true },
+      {
+        projection: {
+          _id: 0,
+          lastOnline: 0,
+        },
+      }
+    )
     .sort({
       last_checked: -1,
     })

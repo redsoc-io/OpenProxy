@@ -100,7 +100,7 @@ export default function ServerDisplay({ server, grid = false }) {
         <Td>
           <div className="flex items-center gap-3">
             <div className="text-3xl">{icon}</div>
-            <div className="font-bold">{lookup.byIso(server.geo).country}</div>
+            <div className="font-bold">{server.country}</div>
           </div>
         </Td>
         <Td>
