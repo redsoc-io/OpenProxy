@@ -1,6 +1,6 @@
 const db = require("../lib/mongo");
 const downloadFileWithProxy = require("../lib/proxyDownload");
-const n = 100;
+const n = 20;
 
 async function updateWorking() {
   const mg = await db();
