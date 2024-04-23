@@ -1,9 +1,4 @@
 import db from "../../lib/mongo";
-function extractIpAddress(urlText) {
-  var ipRegex = /\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/g;
-  var ipAddresses = urlText.match(ipRegex);
-  return ipAddresses[0];
-}
 
 export default async function handler(req, res) {
   const col = await db();

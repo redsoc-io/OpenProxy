@@ -24,7 +24,7 @@ async function updateWorking() {
       doc.response_time = test_results.responseTime;
       doc.working = true;
       doc.streak = (doc.streak || 0) + 1;
-      doc.geo = test_results.geo;
+      doc.geo = test_results.country;
     } catch (e) {
       doc.last_checked = new Date();
       doc.tested = 1;
