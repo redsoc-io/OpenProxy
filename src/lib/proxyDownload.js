@@ -2,9 +2,9 @@ const axios = require("axios");
 const { SocksProxyAgent } = require("socks-proxy-agent");
 const HttpsProxyAgent = require("https-proxy-agent");
 
-var url = "https://open-proxy.netlify.app/api/hello";
+var url = "http://ip-api.com/json/";
 
-export default async function downloadFileWithProxy(proxyUrl) {
+async function downloadFileWithProxy(proxyUrl) {
   let agent;
   if (proxyUrl.startsWith("socks")) {
     agent = new SocksProxyAgent(proxyUrl);
@@ -25,7 +25,7 @@ export default async function downloadFileWithProxy(proxyUrl) {
     try {
       response = await axios({
         method: "GET",
-        url: `${url}?from=${proxyUrl}`,
+        url: `${url}`,
         httpAgent: agent,
         httpsAgent: agent,
       });
@@ -37,10 +37,16 @@ export default async function downloadFileWithProxy(proxyUrl) {
       return;
     }
 
-    const { country } = response.data;
-    console.log(country);
+    const { data } = response;
+
+    const country = data.countryCode;
+
+    console.log(`Country: ${country}`);
+
     const responseTime = Date.now() - start;
 
     resolve({ responseTime, country });
   });
 }
+
+module.exports = downloadFileWithProxy;

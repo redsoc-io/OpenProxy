@@ -16,6 +16,12 @@ export default function ServerDisplay({ server, grid = false }) {
 
   const proto = server.url.split(":")[0];
 
+  var icon = null;
+
+  try {
+    icon = getUnicodeFlagIcon(lookup.byIso(server.geo).iso2);
+  } catch (e) {}
+
   if (grid)
     return (
       <div className="server p-3">
@@ -28,11 +34,9 @@ export default function ServerDisplay({ server, grid = false }) {
                 </span>
               </div>
               <div className="flex items-center gap-3">
-                <div className="text-3xl">
-                  {getUnicodeFlagIcon(lookup.byIso(server.geo).iso2)}
-                </div>
+                <div className="text-3xl">{icon}</div>
                 <div className="font-bold">
-                  {lookup.byIso(server.geo).country}
+                  {server.country === "Unknown" ? "" : server.country}
                 </div>
               </div>
               <div>
@@ -95,9 +99,7 @@ export default function ServerDisplay({ server, grid = false }) {
         </Td>
         <Td>
           <div className="flex items-center gap-3">
-            <div className="text-3xl">
-              {getUnicodeFlagIcon(lookup.byIso(server.geo).iso2)}
-            </div>
+            <div className="text-3xl">{icon}</div>
             <div className="font-bold">{lookup.byIso(server.geo).country}</div>
           </div>
         </Td>

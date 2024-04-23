@@ -43,7 +43,11 @@ export default function Servers({}) {
   }, []);
 
   data = data.map((server) => {
-    server.country = lookup.byIso(server.geo).country;
+    try {
+      server.country = lookup.byIso(server.geo).country;
+    } catch (e) {
+      server.country = "Unknown";
+    }
     return server;
   });
   const protos = Array.from(

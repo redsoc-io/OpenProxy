@@ -1,12 +1,12 @@
-import db from "../../lib/mongo";
-import downloadFileWithProxy from "../../lib/proxyDownload";
+const db = require("../lib/mongo");
+const downloadFileWithProxy = require("../lib/proxyDownload");
 const n = 100;
 
-export default async function handler(req, res) {
+async function updateWorking() {
   const mg = await db();
+  const thresholdTime = new Date(Date.now() - 3 * 60 * 1000);
   const docs = await mg
-    .find({ working: true })
-    .sort({ last_checked: 1 })
+    .find({ working: true, last_checked: { $lt: thresholdTime } })
     .limit(n)
     .toArray();
   const startTime = new Date();
@@ -19,6 +19,7 @@ export default async function handler(req, res) {
       doc.response_time = test_results.responseTime;
       doc.working = true;
       doc.streak = (doc.streak || 0) + 1;
+      doc.geo = test_results.geo;
     } catch (e) {
       doc.last_checked = new Date();
       doc.tested = 1;
@@ -49,14 +50,13 @@ export default async function handler(req, res) {
 
   const working = test.filter((t) => t.working);
 
-  console.log(`Working: ${working.length}`);
-  console.log(`Tested: ${test.length}`);
-
-  res.status(200).json({
+  return {
     working: working.length,
     tested: test.length,
     date: new Date(),
     delay: endTime - startTime,
     dbWriteTime: dbWriteEndTime - dbWriteTime,
-  });
+  };
 }
+
+module.exports = updateWorking;

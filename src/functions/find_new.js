@@ -1,6 +1,6 @@
-import sources from "../../data/lists.json";
-import db from "../../lib/mongo";
-import crypto from "crypto";
+const sources = require("../data/lists.json");
+const db = require("../lib/mongo");
+const crypto = require("crypto");
 
 function isValidUrl(url) {
   var urlRegex = /^(http|https|socks4|socks5):\/\/[^ "]+$/;
@@ -46,7 +46,6 @@ async function get_new_servers() {
   dat = new Set(dat);
   dat = Array.from(dat);
   len = len - dat.length;
-  console.log(`Removed ${len} duplicates from the list.`);
 
   var insert = dat.map(async (server) => {
     const hash = sha2hash(server);
@@ -67,7 +66,7 @@ async function get_new_servers() {
   return insert;
 }
 
-export default async function handler(req, res) {
+async function find_new() {
   const prm = [get_existing_servers, get_new_servers].map(async (fn) => {
     return await fn();
   });
@@ -80,7 +79,9 @@ export default async function handler(req, res) {
     (await db()).insertMany(filtered);
   }
 
-  res.status(200).json({
+  return {
     added: filtered.length,
-  });
+  };
 }
+
+module.exports = find_new;
