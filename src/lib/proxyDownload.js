@@ -2,7 +2,7 @@ const axios = require("axios");
 const { SocksProxyAgent } = require("socks-proxy-agent");
 const HttpsProxyAgent = require("https-proxy-agent");
 
-var url = "https://open-proxy.vercel.app/api/hello";
+var url = "https://open-proxy.netlify.app/api/hello";
 
 export default async function downloadFileWithProxy(proxyUrl) {
   let agent;
