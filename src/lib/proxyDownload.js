@@ -35,6 +35,7 @@ async function downloadFileWithProxy(proxyUrl) {
 
     if (response === null || response.status !== 200) {
       reject("Invalid response");
+      return;
     }
 
     const { data } = response;
