@@ -3,7 +3,7 @@ const downloadFileWithProxy = require("../lib/proxyDownload");
 async function updateAll(days = 7) {
   const mg = await db();
 
-  const n = 200;
+  const n = 30;
 
   const thresholdTime = new Date(Date.now() - 1000 * 60 * 60 * 24 * days);
   const docs = await mg
