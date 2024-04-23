@@ -4,12 +4,12 @@ import { useState } from "react";
 export default function ServerURL({ url }) {
   const [copied, setCopied] = useState(false);
   return (
-    <div className="text-center h-full w-full">
+    <div className="text-center h-full">
       <div className="flex rounded-md  bg-gray-200 overflow-hidden">
         <input
           value={url}
           readOnly
-          className="text-slate-700 w-full px-3 p-2 h-full font-mono bg-transparent focus:outline-none focus:bg-gray-300 focus:text-gray-900 select:text-gray-900 select-none"
+          className="text-slate-700 w-full min-w-80 px-3 p-2 h-full font-mono bg-transparent focus:outline-none focus:bg-gray-300 focus:text-gray-900 select:text-gray-900 select-none"
         />
         <button
           className={`p-3 ${

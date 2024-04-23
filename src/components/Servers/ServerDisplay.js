@@ -6,14 +6,17 @@ import { BsStarFill } from "react-icons/bs";
 import { ImClock2 } from "react-icons/im";
 import ServerURL from "./ServerURL";
 
-export default function ServerDisplay({ server, grid = false }) {
+export default function ServerDisplay({ server, grid = false, percent = 100 }) {
   const server_speed_color =
-    server.response_time < 1000
+    server.response_time < 500
       ? "bg-green-500"
-      : server.response_time < 3000
+      : server.response_time < 1000
+      ? "bg-yellow-500"
+      : server.response_time < 2000
       ? "bg-orange-500"
-      : "bg-red-500";
-
+      : server.response_time < 3000
+      ? "bg-red-500"
+      : "bg-red-600";
   const proto = server.url.split(":")[0];
 
   var icon = null;
@@ -24,27 +27,29 @@ export default function ServerDisplay({ server, grid = false }) {
 
   if (grid)
     return (
-      <div className="server p-3">
-        <div className="shadow-md rounded-md overflow-hidden bg-white border">
-          <div className="flex items-center justify-center bg-gray-200 p-3">
+      <div className="server lg:p-3 py-2">
+        <div className="rounded-md overflow-hidden bg-white border">
+          <div className="flex items-center justify-center bg-gray-100 px-3 py-1">
             <div className="font-bold text-lg text-gray-800 flex items-center justify-between gap-4 w-full">
-              <div>
-                <span className="uppercase text-sm bg-blue-500 rounded-md py-1 px-2 text-white block">
-                  {proto}
-                </span>
-              </div>
               <div className="flex items-center gap-3">
-                <div className="text-3xl">{icon}</div>
-                <div className="font-bold">
+                <div className="text-4xl">{icon}</div>
+                <div className="font-normal text-md">
                   {server.country === "Unknown" ? "" : server.country}
                 </div>
               </div>
-              <div>
-                <span
-                  className={`text-sm ${server_speed_color} rounded-md py-1 px-2 text-white block`}
-                >
-                  {server.response_time} ms
-                </span>
+              <div className="flex justify-center items-center gap-2">
+                <div>
+                  <span className="uppercase text-xs bg-blue-500 rounded-md py-1 px-2 text-white block">
+                    {proto}
+                  </span>
+                </div>
+                <div>
+                  <span
+                    className={`text-xs ${server_speed_color} rounded-md py-1 px-2 text-white block`}
+                  >
+                    {server.response_time} ms
+                  </span>
+                </div>
               </div>
             </div>
           </div>
@@ -52,7 +57,7 @@ export default function ServerDisplay({ server, grid = false }) {
             <div
               className={`${server_speed_color} h-1`}
               style={{
-                width: `${server.speed_score}%`,
+                width: `${100 - percent}%`,
               }}
             ></div>
           </div>

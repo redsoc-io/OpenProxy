@@ -50,6 +50,13 @@ export default function Servers({}) {
     }
     return server;
   });
+
+  const response_times = data.map((server) => server.response_time).sort();
+  const [rt_min, rt_max] = [
+    response_times[0],
+    response_times[response_times.length - 1],
+  ];
+
   const protos = Array.from(
     new Set(data.map((server) => server.url.split(":")[0]))
   ).sort();
@@ -68,6 +75,9 @@ export default function Servers({}) {
     .filter((server) => {
       if (countryFilter === "all") return true;
       return server.country === countryFilter;
+    })
+    .sort((a, b) => {
+      return b.streak - a.streak;
     });
 
   return (
@@ -75,9 +85,9 @@ export default function Servers({}) {
       <Head>
         <title>OProxy: Servers</title>
       </Head>
-      <div className="w-full py-5 px-4">
-        <div className="shadow-md border rounded-md py-3">
-          <div className="w-full bg-white flex px-3 justify-between items-center flex-wrap">
+      <div className="w-full lg:px-4">
+        <div className="shadow border rounded-md">
+          <div className="w-full bg-white flex justify-between items-center flex-wrap">
             <div className="lg:w-2/5 w-full">
               <div className="p-3">
                 <input
@@ -85,7 +95,7 @@ export default function Servers({}) {
                   onChange={(e) => {
                     setSearchQuery(e.target.value);
                   }}
-                  className="w-full px-3 p-2 bg-gray-100 rounded-md shadow border text-gray-700"
+                  className="w-full px-3 p-2 bg-gray-50 rounded-md border text-gray-700"
                   placeholder={`Search in ${data.length || 0} servers`}
                   defaultValue={query}
                   ref={inputRef}
@@ -98,7 +108,7 @@ export default function Servers({}) {
                   onChange={(e) => {
                     setProtoFilter(e.target.value);
                   }}
-                  className="p-2 bg-gray-100 rounded-md shadow border text-gray-700 w-full"
+                  className="p-2 bg-gray-50 rounded-md border text-gray-700 w-full"
                 >
                   <option value="all">Show all protocols</option>
                   {protos.map((proto, i) => {
@@ -114,7 +124,7 @@ export default function Servers({}) {
             <div className="grow">
               <div className="p-3">
                 <select
-                  className="p-2 bg-gray-100 rounded-md shadow border text-gray-700 w-full"
+                  className="p-2 bg-gray-50 rounded-md border text-gray-700 w-full"
                   onChange={(e) => {
                     setCountryFilter(e.target.value);
                   }}
@@ -155,7 +165,7 @@ export default function Servers({}) {
           </div>
         </div>
       </div>
-      <div className="p-4 w-full">
+      <div className="lg:p-4 px-2 w-full">
         {data.length > 0 && (
           <>
             {grid ? (
@@ -169,6 +179,11 @@ export default function Servers({}) {
                         key={`grid-server-${server.url}-${i}`}
                         server={server}
                         grid={grid}
+                        percent={Math.floor(
+                          ((server.response_time - rt_min) /
+                            (rt_max - rt_min)) *
+                            100
+                        )}
                       />
                     );
                   })}
