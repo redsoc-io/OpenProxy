@@ -1,12 +1,12 @@
 const db = require("../lib/mongo");
 const downloadFileWithProxy = require("../lib/proxyDownload");
 
-async function updateWorking() {
+async function updateRecentlyActive(days = 20) {
   const mg = await db();
-  const thresholdTime = new Date(Date.now() - 3 * 60 * 1000);
+  const thresholdTime = new Date(Date.now() - 1000 * 60 * 60 * 24 * days);
   const n = 20;
   const docs = await mg
-    .find({ working: true, last_checked: { $lt: thresholdTime } })
+    .find({ working: false, lastOnline: { $gt: thresholdTime } })
     .limit(n)
     .toArray();
 
@@ -67,4 +67,4 @@ async function updateWorking() {
   };
 }
 
-module.exports = updateWorking;
+module.exports = updateRecentlyActive;

@@ -17,7 +17,7 @@ async function downloadFileWithProxy(proxyUrl) {
   return new Promise(async (resolve, reject) => {
     setTimeout(() => {
       reject("Timeout!");
-    }, 7000);
+    }, 10000);
 
     let response = null,
       start = Date.now();
@@ -41,7 +41,7 @@ async function downloadFileWithProxy(proxyUrl) {
     const { data } = response;
 
     const country = data.split("\n")[2];
-    console.log(country || "No country found!!!");
+
     const responseTime = Date.now() - start;
 
     resolve({ responseTime, country });

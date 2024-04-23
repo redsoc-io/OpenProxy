@@ -1,13 +1,18 @@
 const updateAll = require("./updateAll");
 const updateWorking = require("./updateWorking");
+const updateRecentlyActive = require("./updateRecentlyActive");
 const find_new = require("./find_new");
 
 async function updater(once = false) {
-  const functions = [find_new, updateAll, updateWorking];
+  const functions = [find_new, updateAll, updateWorking, updateRecentlyActive];
 
   var results = functions.map(async (func) => {
     try {
-      return await func();
+      const result = await func();
+      return {
+        name: func.name,
+        ...result,
+      };
     } catch (e) {
       console.log(e);
     }
@@ -17,6 +22,7 @@ async function updater(once = false) {
 
   if (!once) updater();
 
+  process.stdout.write("\x1B[2J\x1B[0f");
   console.log(results);
   return results;
 }
