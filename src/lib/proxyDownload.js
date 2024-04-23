@@ -2,7 +2,7 @@ const axios = require("axios");
 const { SocksProxyAgent } = require("socks-proxy-agent");
 const HttpsProxyAgent = require("https-proxy-agent");
 
-var url = "http://ip-api.com/json/";
+var url = "https://api.my-ip.io/v2/ip.txt";
 
 async function downloadFileWithProxy(proxyUrl) {
   let agent;
@@ -40,7 +40,8 @@ async function downloadFileWithProxy(proxyUrl) {
 
     const { data } = response;
 
-    const country = data.countryCode;
+    const country = data.split("\n")[2];
+    console.log(country || "No country found!!!");
     const responseTime = Date.now() - start;
 
     resolve({ responseTime, country });
