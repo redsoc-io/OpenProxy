@@ -7,6 +7,7 @@ async function updateWorking() {
   const n = 20;
   const docs = await mg
     .find({ working: true, last_checked: { $lt: thresholdTime } })
+    .sort({ last_checked: 1 })
     .limit(n)
     .toArray();
 

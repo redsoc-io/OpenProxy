@@ -7,6 +7,7 @@ async function updateRecentlyActive(days = 20) {
   const n = 20;
   const docs = await mg
     .find({ working: false, lastOnline: { $gt: thresholdTime } })
+    .sort({ last_checked: 1 })
     .limit(n)
     .toArray();
 
