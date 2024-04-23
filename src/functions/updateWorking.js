@@ -30,7 +30,6 @@ async function updateWorking() {
       doc.last_checked = new Date();
       doc.tested = 1;
       doc.working = false;
-      doc.streak = 0;
       //console.log(e);
     }
     return doc;
