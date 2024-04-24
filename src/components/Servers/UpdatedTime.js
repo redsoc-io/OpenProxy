@@ -14,5 +14,5 @@ export default function Updated({ updated }) {
     }, 1000);
   }, []);
 
-  return <div className="w-32">{toBeautyString(new Date(updated), date)}</div>;
+  return <div className="">{toBeautyString(new Date(updated), date)}</div>;
 }

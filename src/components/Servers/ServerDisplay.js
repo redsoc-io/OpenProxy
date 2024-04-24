@@ -62,31 +62,31 @@ export default function ServerDisplay({ server, grid = false, percent = 100 }) {
             ></div>
           </div>
           <div className="p-1">
-            <table className="w-full text-left">
-              <tbody>
-                <tr>
-                  <Td colSpan={4} className="border-none">
-                    <ServerURL url={server.url} />
-                  </Td>
-                </tr>
-                <tr>
-                  <Td className="border-none">
-                    <div className="uppercase flex items-center gap-3 justify-center">
-                      <span className="text-blue-500">
-                        <BsStarFill />
-                      </span>
-                      <span>{server.streak}</span>
-                    </div>
-                  </Td>
-                  <Td className="border-none">
-                    <div className="flex items-center gap-2 text-gray-600 justify-center">
+            <div className="">
+              <div className="w-full p-2">
+                <ServerURL url={server.url} />
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="uppercase flex items-center justify-center p-3 text-center">
+                  <div className="flex justify-center items-center gap-3">
+                    <span className="text-blue-500">
+                      <BsStarFill />
+                    </span>
+                    <span>{server.streak}</span>
+                  </div>
+                </div>
+                <div className="flex items-center text-gray-600 justify-center p-3 text-center">
+                  <div className="flex justify-center items-center gap-3 w-32">
+                    <span className="text-blue-500">
                       <ImClock2 />
+                    </span>
+                    <span>
                       <Updated updated={server.last_checked} />
-                    </div>
-                  </Td>
-                </tr>
-              </tbody>
-            </table>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

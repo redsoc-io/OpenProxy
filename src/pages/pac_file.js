@@ -20,9 +20,9 @@ export default function PacFile() {
           Proxy Auto Configuration (PAC) File
         </h1>
       </div>
-      <div className="p-4 flex items-center justify-center w-full">
-        <div className="w-auto mr-4 font-bold">PAC URL </div>
-        <div className="w-3/4">
+      <div className="lg:p-4 flex items-center justify-center w-full flex-col w-full">
+        <div className="w-auto lg:mr-4 lg:p-0 p-4 font-bold">PAC URL </div>
+        <div className="p-2 flex items-center justify-center w-full">
           <ServerURL url={`${origin}/api/proxy.pac`} />
         </div>
       </div>
