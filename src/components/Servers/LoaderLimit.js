@@ -1,6 +1,4 @@
-import { useInView } from "react-intersection-observer";
 import { CgSpinner } from "react-icons/cg";
-import { useEffect } from "react";
 
 export default function LoaderLimit() {
   return (

@@ -1,7 +1,14 @@
 import Head from "next/head";
 import Nav from "../components/Nav";
+import ServerURL from "../components/Servers/ServerURL";
 
-export default function PacFile({ base_url }) {
+export default function PacFile() {
+  var origin = null;
+  try {
+    var { origin } = window.location;
+  } catch (e) {
+    origin = "https://opp.redsoc.in";
+  }
   return (
     <div>
       <Nav />
@@ -16,12 +23,7 @@ export default function PacFile({ base_url }) {
       <div className="p-4 flex items-center justify-center w-full">
         <div className="w-auto mr-4 font-bold">PAC URL </div>
         <div className="w-3/4">
-          <input
-            type="text"
-            className="w-full border border-gray-300 rounded-lg px-4 py-2"
-            readOnly
-            value={`${base_url}/api/proxy.pac`}
-          />
+          <ServerURL url={`${origin}/api/proxy.pac`} />
         </div>
       </div>
       <div className="p-4 flex items-center justify-center w-full"></div>
@@ -56,14 +58,3 @@ export default function PacFile({ base_url }) {
     </div>
   );
 }
-
-export const getServerSideProps = async ({ req }) => {
-  const protocol = req.connection.encrypted ? "https" : "http";
-  const host_base = req.headers.host;
-  const base_url = `${protocol}://${host_base}`;
-  return {
-    props: {
-      base_url,
-    },
-  };
-};
