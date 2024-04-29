@@ -28,6 +28,7 @@ async function downloadFileWithProxy(proxyUrl) {
         url: `${url}`,
         httpAgent: agent,
         httpsAgent: agent,
+        maxRedirects: 0,
         onUploadProgress: (progressEvent) => {
           console.log(progressEvent);
         },
