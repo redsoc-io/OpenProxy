@@ -13,8 +13,9 @@ const readFile = (path) => {
 };
 
 export default async function handler(req, res) {
-  var data_path = path.join(__dirname, "../../../../data/data.json");
-  console.log(data_path, __dirname);
+  const PWD = process.env.PWD;
+  var data_path = `${PWD}/data/data.json`;
+  console.log(data_path, __dirname, PWD);
   var read = await readFile(data_path);
   var servers = Object.keys(read)
     .map((key) => {
