@@ -1,15 +1,19 @@
-const db = require("../lib/mongo");
+const datastore = require("../lib/datastore");
 const downloadFileWithProxy = require("../lib/proxyDownload");
 
 async function updateRecentlyActive(days = 20) {
-  const mg = await db();
   const thresholdTime = new Date(Date.now() - 1000 * 60 * 60 * 24 * days);
   const n = 20;
-  const docs = await mg
-    .find({ working: false, lastOnline: { $gt: thresholdTime } })
-    .sort({ last_checked: 1 })
-    .limit(n)
-    .toArray();
+
+  const docs = datastore
+    .filter((doc) => {
+      if (!doc.lastOnline) return false;
+      const conv = new Date(doc.lastOnline);
+      return conv > thresholdTime;
+    })
+    .filter((doc) => doc.working === false)
+    .sort((a, b) => new Date(a.last_checked) - new Date(b.last_checked))
+    .splice(0, n);
 
   if (docs.length === 0) {
     return {};
@@ -23,34 +27,25 @@ async function updateRecentlyActive(days = 20) {
       doc.last_checked = new Date();
       doc.tested = 1;
       doc.working = true;
-      doc.streak = (doc.streak || 0) + 1;
+      doc.streak = doc.streak ? (doc.streak > 0 ? doc.streak + 1 : 0) : 1;
       doc.lastOnline = new Date();
       doc = { ...doc, ...test_results };
     } catch (e) {
       doc.last_checked = new Date();
       doc.tested = 1;
       doc.working = false;
-      doc.streak = 0;
+      doc.streak -= 1;
       //console.log(e);
     }
     return doc;
   });
 
   test = await Promise.all(test);
-
-  const bulkUpdateOperations = test.map((doc) => ({
-    updateOne: {
-      filter: { _id: doc._id },
-      update: { $set: doc },
-    },
-  }));
   const endTime = new Date();
 
   const dbWriteTime = new Date();
 
-  if (bulkUpdateOperations.length > 0) {
-    const set = await mg.bulkWrite(bulkUpdateOperations);
-  }
+  const updated = datastore.update(test);
 
   const dbWriteEndTime = new Date();
 
@@ -59,6 +54,7 @@ async function updateRecentlyActive(days = 20) {
 
   return {
     working: working.length,
+    updated: updated.updatedCount,
     workingCountries: workingCountries,
     tested: test.length,
     date: new Date(),

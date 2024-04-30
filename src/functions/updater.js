@@ -9,6 +9,7 @@ async function updater(once = false) {
   var results = functions.map(async (func) => {
     try {
       const result = await func();
+      console.log(`Done for ${func.name}`);
       return {
         name: func.name,
         ...result,

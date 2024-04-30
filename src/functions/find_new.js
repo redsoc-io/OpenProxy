@@ -1,6 +1,6 @@
 const sources = require("../data/lists.json");
-const db = require("../lib/mongo");
 const crypto = require("crypto");
+const datastore = require("../lib/datastore");
 
 function isValidUrl(url) {
   var urlRegex = /^(http|https|socks4|socks5):\/\/[^ "]+$/;
@@ -9,16 +9,14 @@ function isValidUrl(url) {
 }
 
 function sha2hash(text) {
-  return crypto.createHash("sha256").update(text).digest("hex");
+  return crypto.createHash("sha256").update(text).digest("base64");
 }
 
 async function get_existing_servers() {
-  const sv = await db();
-  const servers = await sv.find({}, { projection: { _id: 1 } }).toArray();
-  const docs = servers.map(({ _id }) => {
-    return _id;
-  });
-  const set = new Set(docs);
+  const data = datastore.get().map((doc) => doc._id);
+
+  const set = new Set(data);
+
   return set;
 }
 
@@ -67,21 +65,26 @@ async function get_new_servers() {
 }
 
 async function find_new() {
+  var timeTaken = Date.now();
   const prm = [get_existing_servers, get_new_servers].map(async (fn) => {
-    return await fn();
+    const result = await fn();
+    return result;
   });
 
   const [docs, data] = await Promise.all(prm);
 
+  timeTaken = Date.now() - timeTaken;
+
   var filtered = data.filter(({ _id }) => !docs.has(_id));
 
   if (filtered.length > 0) {
-    (await db()).insertMany(filtered);
-  }
+    const action = datastore.insert(filtered);
 
-  return {
-    added: filtered.length,
-  };
+    return {
+      added: action.insertedCount,
+    };
+  }
+  return {};
 }
 
 module.exports = find_new;

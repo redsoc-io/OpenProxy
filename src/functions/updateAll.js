@@ -1,20 +1,16 @@
-const db = require("../lib/mongo");
+const datastore = require("../lib/datastore");
 const downloadFileWithProxy = require("../lib/proxyDownload");
 async function updateAll(days = 7) {
-  const mg = await db();
-
-  const n = 30;
-
-  const thresholdTime = new Date(Date.now() - 1000 * 60 * 60 * 24 * days);
-  const docs = await mg
-    .find({
-      working: false,
-      addedOn: { $gt: thresholdTime },
-    })
-    .sort({ last_checked: 1 })
-    .limit(n)
-    .toArray();
   const startTime = new Date();
+  const thresholdTime = new Date(Date.now() - 1000 * 60 * 60 * 24 * days);
+  const docs = datastore
+    .filter((doc) => {
+      const conv = new Date(doc.last_checked);
+      return conv > thresholdTime;
+    })
+    .filter((doc) => doc.working === false)
+    .sort((a, b) => new Date(a.last_checked) - new Date(b.last_checked))
+    .splice(0, 30);
 
   var test = docs.map(async (doc) => {
     try {
@@ -28,6 +24,7 @@ async function updateAll(days = 7) {
       doc.last_checked = new Date();
       doc.tested = 1;
       doc.working = false;
+      doc.streak -= 1;
       //console.log(e);
     }
     return doc;
@@ -35,19 +32,11 @@ async function updateAll(days = 7) {
 
   test = await Promise.all(test);
 
-  const bulkUpdateOperations = test.map((doc) => ({
-    updateOne: {
-      filter: { _id: doc._id },
-      update: { $set: doc },
-    },
-  }));
   const endTime = new Date();
 
   const dbWriteTime = new Date();
 
-  if (bulkUpdateOperations.length > 0) {
-    const set = await mg.bulkWrite(bulkUpdateOperations);
-  }
+  const updated = datastore.update(test);
 
   const dbWriteEndTime = new Date();
 
@@ -55,6 +44,7 @@ async function updateAll(days = 7) {
   const workingCountries = working.map((t) => t.geo);
   return {
     working: working.length,
+    updated: updated.updatedCount,
     workingCountries: workingCountries,
     tested: test.length,
     date: new Date(),
