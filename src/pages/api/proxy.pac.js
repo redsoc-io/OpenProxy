@@ -1,4 +1,4 @@
-import db from "../../lib/mongo";
+import fs from "fs";
 
 function write_proxy_pac(urls) {
   urls = urls.map((url) => {
@@ -16,42 +16,48 @@ function write_proxy_pac(urls) {
   `;
 }
 
-var cached = {
-  urls: [],
-  last_updated: 0,
-};
+function filepathExists(filepath) {
+  try {
+    fs.accessSync(filepath, fs.constants.F_OK);
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
+
+function readFile(filepath) {
+  return new Promise((resolve, reject) => {
+    fs.readFile(filepath, { encoding: "utf8" }, (err, data) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(JSON.parse(data));
+      }
+    });
+  });
+}
 
 export default async function handler(req, res) {
   res.setHeader("Content-Type", "application/x-ns-proxy-autoconfig");
   res.setHeader("Content-Disposition", "attachment; filename=proxy.pac");
 
-  if (cached.url && Date.now() - cached.last_updated < 1000 * 60 * 2) {
-    console.log("Serving cached proxy.pac");
-    res.status(200).send(write_proxy_pac(cached.urls));
+  const { PWD } = process.env;
+  console.log(PWD);
+  var data_path = `${PWD}/data/working.json`;
+
+  console.log(data_path);
+
+  if (!filepathExists(data_path)) {
+    console.log("Working.json file not found");
+    res.status(500).json([]);
     return;
   }
 
-  const col = await db();
-  var servers = await col
-    .find(
-      { working: true },
-      {
-        projection: {
-          _id: 0,
-          lastOnline: 0,
-        },
-      }
-    )
-    .sort({
-      last_checked: -1,
-    })
-    .toArray();
+  var servers = await readFile(data_path);
+  console.log(servers);
 
   servers = servers.sort((a, b) => b.streak - a.streak);
   const urls = servers.map((server) => server.url);
-
-  cached.urls = urls;
-  cached.last_updated = Date.now();
 
   res.status(200).send(write_proxy_pac(urls));
 }
