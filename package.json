@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "postbuild": "wget -O data/data.json https://opp.redsoc.in/api/data.json",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
