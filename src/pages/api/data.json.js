@@ -11,7 +11,7 @@ function filepathExists(filepath) {
 }
 export default async function handler(req, res) {
   const PWD = process.env.PWD;
-  var data_path = `${PWD}/data/working.json`;
+  var data_path = `${PWD}/data/data.json`;
 
   if (!filepathExists(data_path)) {
     console.log("Working.json file not found");
