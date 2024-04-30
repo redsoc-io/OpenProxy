@@ -34,6 +34,10 @@ async function writeWorking() {
     .filter((doc) => doc.working === true)
     .sort((a, b) => b.streak - a.streak);
   writeFile(`${PWD}/data/working.json`, servers);
+  return {
+    total: servers.length,
+    date: new Date(),
+  };
 }
 
 module.exports = writeWorking;

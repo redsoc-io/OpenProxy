@@ -13,25 +13,26 @@ async function updater(once = false) {
     writeWorking,
   ];
 
-  var results = functions.map(async (func) => {
-    try {
-      const result = await func();
-      console.log(`Done for ${func.name}`);
-      return {
-        name: func.name,
-        ...result,
-      };
-    } catch (e) {
-      console.log(e);
-    }
-  });
+  const results = [];
 
-  results = await Promise.all(results);
+  var totalTime = new Date();
+
+  for (let i = 0; i < functions.length; i++) {
+    const fn = functions[i];
+    process.stdout.write(`Running ${fn.name}...`);
+    const res = await fn();
+    results[i] = {
+      function: fn.name,
+      ...res,
+    };
+    process.stdout.write("Done\n");
+  }
 
   if (!once) updater();
 
   process.stdout.write("\x1B[2J\x1B[0f");
-  console.log(results);
+  totalTime = new Date() - totalTime;
+  console.log(results, `Total Time: ${totalTime / 1000} seconds`);
   return results;
 }
 

@@ -3,7 +3,7 @@ const downloadFileWithProxy = require("../lib/proxyDownload");
 
 async function updateRecentlyActive(days = 20) {
   const thresholdTime = new Date(Date.now() - 1000 * 60 * 60 * 24 * days);
-  const n = 20;
+  const n = 30;
 
   const docs = datastore
     .filter((doc) => {
