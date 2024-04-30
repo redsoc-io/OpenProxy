@@ -2,9 +2,16 @@ const updateAll = require("./updateAll");
 const updateWorking = require("./updateWorking");
 const updateRecentlyActive = require("./updateRecentlyActive");
 const find_new = require("./find_new");
+const writeWorking = require("./writeWorking");
 
 async function updater(once = false) {
-  const functions = [find_new, updateAll, updateWorking, updateRecentlyActive];
+  const functions = [
+    find_new,
+    updateAll,
+    updateWorking,
+    updateRecentlyActive,
+    writeWorking,
+  ];
 
   var results = functions.map(async (func) => {
     try {
