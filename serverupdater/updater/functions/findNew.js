@@ -1,6 +1,6 @@
-const sources = require("../data/lists.json");
+const sources = require("../../../src/data/lists.json");
 const crypto = require("crypto");
-const datastore = require("../lib/datastore");
+const transformObjects = require("../transformObject");
 
 function isValidUrl(url) {
   var urlRegex = /^(http|https|socks4|socks5):\/\/[^ "]+$/;
@@ -10,14 +10,6 @@ function isValidUrl(url) {
 
 function sha2hash(text) {
   return crypto.createHash("sha256").update(text).digest("base64");
-}
-
-async function get_existing_servers() {
-  const data = datastore.get().map((doc) => doc._id);
-
-  const set = new Set(data);
-
-  return set;
 }
 
 async function get_new_servers() {
@@ -64,27 +56,30 @@ async function get_new_servers() {
   return insert;
 }
 
-async function find_new() {
+async function findNew(data) {
+  const existingDataLength = Object.keys(data).length;
   var timeTaken = Date.now();
-  const prm = [get_existing_servers, get_new_servers].map(async (fn) => {
+  const prm = [get_new_servers].map(async (fn) => {
     const result = await fn();
     return result;
   });
 
-  const [docs, data] = await Promise.all(prm);
+  const [nservers] = await Promise.all(prm);
+  const n_servers_transformed = transformObjects(nservers);
+
+  data = { ...n_servers_transformed, ...data };
+
+  const newDataLength = Object.keys(data).length;
 
   timeTaken = Date.now() - timeTaken;
 
-  var filtered = data.filter(({ _id }) => !docs.has(_id));
-
-  if (filtered.length > 0) {
-    const action = datastore.insert(filtered);
-
-    return {
-      added: action.insertedCount,
-    };
-  }
-  return {};
+  return {
+    data,
+    result: {
+      newServers: newDataLength - existingDataLength,
+      timeTaken,
+    },
+  };
 }
 
-module.exports = find_new;
+module.exports = findNew;

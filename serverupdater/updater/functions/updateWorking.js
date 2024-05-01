@@ -1,20 +1,22 @@
-const datastore = require("../lib/datastore");
-const downloadFileWithProxy = require("../lib/proxyDownload");
+const downloadFileWithProxy = require("../../../src/lib/proxyDownload");
+const transformObjects = require("../transformObject");
 
-async function updateWorking() {
+async function updateWorking(data) {
   const thresholdTime = new Date(Date.now() - 3 * 60 * 1000);
 
-  const docs = datastore
+  const docs = Object.keys(data)
+    .map((key) => {
+      return {
+        _id: key,
+        ...data[key],
+      };
+    })
     .filter((doc) => {
       return new Date(doc.last_checked) < thresholdTime;
     })
     .filter((doc) => doc.working === true)
     .sort((a, b) => new Date(a.last_checked) - new Date(b.last_checked))
     .splice(0, 30);
-
-  if (docs.length === 0) {
-    return {};
-  }
 
   const startTime = new Date();
 
@@ -38,25 +40,26 @@ async function updateWorking() {
 
   test = await Promise.all(test);
 
-  const endTime = new Date();
-
-  const dbWriteTime = new Date();
-
-  const updated = datastore.update(test);
-
-  const dbWriteEndTime = new Date();
-
   const working = test.filter((t) => t.working);
   const workingCountries = working.map((t) => t.geo);
 
+  const endTime = new Date();
+
+  const transformed = transformObjects(test);
+
+  data = {
+    ...data,
+    ...transformed,
+  };
+
   return {
-    working: working.length,
-    updated: updated.updatedCount,
-    workingCountries: workingCountries,
-    tested: test.length,
-    date: new Date(),
-    delay: endTime - startTime,
-    dbWriteTime: dbWriteEndTime - dbWriteTime,
+    result: {
+      working: working.length,
+      workingCountries,
+      updatedCount: test.length,
+      timeTaken: endTime - startTime,
+    },
+    data,
   };
 }
 

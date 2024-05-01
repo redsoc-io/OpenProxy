@@ -1,11 +1,17 @@
-const datastore = require("../lib/datastore");
-const downloadFileWithProxy = require("../lib/proxyDownload");
+const transformObjects = require("../transformObject");
+const downloadFileWithProxy = require("../../../src/lib/proxyDownload");
 
-async function updateRecentlyActive(days = 20) {
-  const thresholdTime = new Date(Date.now() - 1000 * 60 * 60 * 24 * days);
-  const n = 30;
+async function updateRecentlyWentOffline(data) {
+  const hours = 12;
+  const thresholdTime = new Date(Date.now() - 1000 * 60 * 60 * hours);
 
-  const docs = datastore
+  const docs = Object.keys(data)
+    .map((key) => {
+      return {
+        _id: key,
+        ...data[key],
+      };
+    })
     .filter((doc) => {
       if (!doc.lastOnline) return false;
       const conv = new Date(doc.lastOnline);
@@ -13,11 +19,7 @@ async function updateRecentlyActive(days = 20) {
     })
     .filter((doc) => doc.working === false)
     .sort((a, b) => new Date(a.last_checked) - new Date(b.last_checked))
-    .splice(0, n);
-
-  if (docs.length === 0) {
-    return {};
-  }
+    .splice(0, 30);
 
   const startTime = new Date();
 
@@ -41,26 +43,28 @@ async function updateRecentlyActive(days = 20) {
   });
 
   test = await Promise.all(test);
-  const endTime = new Date();
-
-  const dbWriteTime = new Date();
-
-  const updated = datastore.update(test);
-
-  const dbWriteEndTime = new Date();
 
   const working = test.filter((t) => t.working);
   const workingCountries = working.map((t) => t.geo);
 
+  const endTime = new Date();
+
+  const transformed = transformObjects(test);
+
+  data = {
+    ...data,
+    ...transformed,
+  };
+
   return {
-    working: working.length,
-    updated: updated.updatedCount,
-    workingCountries: workingCountries,
-    tested: test.length,
-    date: new Date(),
-    delay: endTime - startTime,
-    dbWriteTime: dbWriteEndTime - dbWriteTime,
+    result: {
+      working: working.length,
+      workingCountries,
+      updatedCount: test.length,
+      timeTaken: endTime - startTime,
+    },
+    data,
   };
 }
 
-module.exports = updateRecentlyActive;
+module.exports = updateRecentlyWentOffline;

@@ -1,3 +1,3 @@
-import updater from "../src/functions/updater.js";
+import updater from "./updater/updater.js";
 
 updater();
