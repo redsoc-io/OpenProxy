@@ -7,7 +7,7 @@ import { Th } from "../../assets/misc";
 import ServerDisplay from "./ServerDisplay";
 import lookup from "country-code-lookup";
 import { IoReload } from "react-icons/io5";
-
+import { CiBoxList } from "react-icons/ci";
 let refreshInterval;
 
 export default function Servers({}) {
@@ -19,6 +19,7 @@ export default function Servers({}) {
 
   const [protoFilter, setProtoFilter] = useState("all");
   const [countryFilter, setCountryFilter] = useState("all");
+  const [sort, setSort] = useState("streak");
 
   var [data, setData] = useState([]);
 
@@ -51,11 +52,21 @@ export default function Servers({}) {
     return server;
   });
 
-  const response_times = data.map((server) => server.response_time).sort();
+  const response_times = data
+    .map((server) => server.response_time)
+    .sort((a, b) => a - b);
+
   const [rt_min, rt_max] = [
     response_times[0],
     response_times[response_times.length - 1],
   ];
+
+  data = data.map((server) => {
+    server.percent =
+      100 -
+      Math.floor(((server.response_time - rt_min) / (rt_max - rt_min)) * 100);
+    return server;
+  });
 
   const protos = Array.from(
     new Set(data.map((server) => server.url.split(":")[0]))
@@ -77,7 +88,11 @@ export default function Servers({}) {
       return server.country === countryFilter;
     })
     .sort((a, b) => {
-      return b.streak - a.streak;
+      if (sort === "streak") {
+        return b.streak - a.streak;
+      } else if (sort === "response_time") {
+        return a.response_time - b.response_time;
+      }
     });
 
   return (
@@ -141,13 +156,26 @@ export default function Servers({}) {
               </div>
             </div>
             <div className="grow">
+              <div className="p-3">
+                <select
+                  className="p-2 bg-gray-50 rounded-md border text-gray-700 w-full"
+                  onChange={(e) => {
+                    setSort(e.target.value);
+                  }}
+                >
+                  <option value="streak">Sort by Streak</option>
+                  <option value="response_time">Sort by Response Time</option>
+                </select>
+              </div>
+            </div>
+            <div className="grow">
               <div className="p-3 flex gap-2 justify-end">
                 <button
                   onClick={() => setGrid(!grid)}
                   className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-3 py-2 rounded-md flex items-center justify-center gap-3"
                 >
                   <span className="text-xl ">
-                    {!grid ? <BsUiChecksGrid /> : <BsViewList />}
+                    {!grid ? <BsUiChecksGrid /> : <CiBoxList />}
                   </span>
                   <span>Show as {grid ? "List" : "Grid"}</span>
                 </button>
@@ -179,11 +207,7 @@ export default function Servers({}) {
                         key={`grid-server-${server.url}-${i}`}
                         server={server}
                         grid={grid}
-                        percent={Math.floor(
-                          ((server.response_time - rt_min) /
-                            (rt_max - rt_min)) *
-                            100
-                        )}
+                        percent={server.percent}
                       />
                     );
                   })}

@@ -56,7 +56,40 @@ async function get_new_servers() {
   return insert;
 }
 
+function checkIfUpdateNeeded(data) {
+  if (Object.keys(data).length === 0) return true;
+  const t = Date.now();
+  const lastAdded = Object.keys(data).map((key) => data[key].addedOn);
+  const timeSinceLastAdded = lastAdded
+    .map((time) => t - new Date(time))
+    .sort()
+    .reverse()[0];
+
+  const lastAddedMintutesAgo = (timeSinceLastAdded / 1000 / 60).toFixed(2);
+
+  console.log(`\nLast added ${lastAddedMintutesAgo} minutes ago`);
+
+  if (lastAddedMintutesAgo > 15) {
+    console.log("Source Update needed");
+    return true;
+  }
+
+  console.log("Source Update not needed");
+  return false;
+}
+
 async function findNew(data) {
+  const updateNeeded = checkIfUpdateNeeded(data);
+  if (!updateNeeded) {
+    return {
+      data,
+      result: {
+        newServers: 0,
+        timeTaken: 0,
+      },
+    };
+  }
+
   const existingDataLength = Object.keys(data).length;
   var timeTaken = Date.now();
   const prm = [get_new_servers].map(async (fn) => {

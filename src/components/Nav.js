@@ -1,6 +1,5 @@
 import Link from "next/link";
-import { useState, useEffect } from "react";
-import { BsCoin } from "react-icons/bs";
+import { BiSolidDonateHeart } from "react-icons/bi";
 
 function NavLink({ children, href = "/" }) {
   return (
@@ -32,12 +31,12 @@ export default function Nav() {
         <div className="py-3 text-center lg:w-auto w-full">
           <Link
             href="https://www.paypal.me/midhunnadh"
-            className="flex items-center justify-center rounded-md bg-blue-600 text-white px-4 py-2"
+            className="flex items-center justify-center rounded-md text-blue-600 hover:text-blue-700 px-4 py-2"
             target={"_blank"}
             rel={"noopener noreferrer"}
           >
             <span className="font-bold text-2xl mr-1">
-              <BsCoin />
+              <BiSolidDonateHeart />
             </span>
             <span className="font-bold uppercase">Donate</span>
           </Link>

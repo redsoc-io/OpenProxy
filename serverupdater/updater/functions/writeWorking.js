@@ -19,6 +19,7 @@ async function writeWorking(data) {
       };
     })
     .filter((doc) => doc.working === true)
+    .filter((doc) => doc.streak > 1)
     .sort((a, b) => b.streak - a.streak);
   writeFile(`${PWD}/data/working.json`, servers);
   timeTaken = Date.now() - timeTaken;

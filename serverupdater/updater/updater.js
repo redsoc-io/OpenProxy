@@ -11,8 +11,9 @@ async function updater(once = false) {
   const functions = [
     loadData,
     findNew,
-    updateAll,
     updateWorking,
+    writeWorking,
+    updateAll,
     updateRecentlyActive,
     updateRecentlyWentOffline,
     writeWorking,

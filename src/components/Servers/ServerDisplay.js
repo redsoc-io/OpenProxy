@@ -6,7 +6,7 @@ import { BsStarFill } from "react-icons/bs";
 import { ImClock2 } from "react-icons/im";
 import ServerURL from "./ServerURL";
 
-export default function ServerDisplay({ server, grid = false, percent = 100 }) {
+export default function ServerDisplay({ server, grid = false, percent = 22 }) {
   const server_speed_color =
     server.response_time < 500
       ? "bg-green-500"
@@ -57,7 +57,7 @@ export default function ServerDisplay({ server, grid = false, percent = 100 }) {
             <div
               className={`${server_speed_color} h-1`}
               style={{
-                width: `${100 - percent}%`,
+                width: `${percent}%`,
               }}
             ></div>
           </div>
@@ -72,7 +72,9 @@ export default function ServerDisplay({ server, grid = false, percent = 100 }) {
                     <span className="text-blue-500">
                       <BsStarFill />
                     </span>
-                    <span>{server.streak}</span>
+                    <span className="text-gray-600 font-semibold">
+                      {server.streak}
+                    </span>
                   </div>
                 </div>
                 <div className="flex items-center text-gray-600 justify-center p-3 text-center">
@@ -80,7 +82,7 @@ export default function ServerDisplay({ server, grid = false, percent = 100 }) {
                     <span className="text-blue-500">
                       <ImClock2 />
                     </span>
-                    <span>
+                    <span className="font-semibold text-gray-500">
                       <Updated updated={server.last_checked} />
                     </span>
                   </div>
