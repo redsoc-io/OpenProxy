@@ -21,17 +21,17 @@ function MyApp({ Component, pageProps }) {
       </Script>
 
       <NextSeo
-        title="Oproxy.ml - Realtime Best Proxy Servers"
-        description="Oproxy.ml is a realtime updated proxy server list. Find the best proxy server for your needs."
-        canonical="https://oproxy.ml/"
+        title="Open Proxy Project - Realtime Best Proxy Servers"
+        description="opp.redsoc.in is a realtime updated proxy server list. Find the best proxy server for your needs."
+        canonical="https://opp.redsoc.in/"
         openGraph={{
-          url: "https://oproxy.ml/",
-          title: "Oproxy.ml - Realtime Best Proxy Servers",
+          url: "https://opp.redsoc.in/",
+          title: "Open Proxy Project - Realtime Best Proxy Servers",
           description:
-            "Oproxy.ml is a realtime updated proxy server list. Find the best proxy server for your needs.",
+            "opp.redsoc.in is a realtime updated proxy server list. Find the best proxy server for your needs.",
           images: [
             {
-              url: "https://oproxy.ml/banner.png",
+              url: "https://opp.redsoc.in/banner.png",
               width: 800,
               height: 600,
               alt: "Banner Image",
