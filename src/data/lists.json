@@ -22,5 +22,33 @@
   {
     "url": "https://raw.githubusercontent.com/themiralay/Proxy-List-World/master/data.txt",
     "type": "http"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/http.txt",
+    "type": "http"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks4.txt",
+    "type": "socks4"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/TheSpeedX/SOCKS-List/master/socks5.txt",
+    "type": "socks5"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/Zaeem20/FREE_PROXIES_LIST/master/http.txt",
+    "type": "http"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/Zaeem20/FREE_PROXIES_LIST/master/https.txt",
+    "type": "https"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/Zaeem20/FREE_PROXIES_LIST/master/socks4.txt",
+    "type": "socks4"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/Zaeem20/FREE_PROXIES_LIST/master/socks5.txt",
+    "type": "socks5"
   }
 ]
