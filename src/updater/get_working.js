@@ -5,7 +5,7 @@ const get_working = async () => {
   return await db.servers.findMany({
     where: {
       working: true,
-      lastUpdated: {
+      lastChecked: {
         lt: fiveMinutesAgo,
       },
     },

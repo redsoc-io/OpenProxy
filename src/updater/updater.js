@@ -4,6 +4,7 @@ const get_working = require("./get_working");
 const get_recently_active = require("./get_recently_active");
 const revalidate = require("./revalidate_servers");
 const update = require("./update");
+const get_tested = require("./get_tested");
 
 class UpdateSync {
   constructor() {
@@ -32,6 +33,11 @@ class UpdateSync {
 
   async revalidate() {
     this.update_buffer = await revalidate(this.update_buffer);
+  }
+
+  async get_tested() {
+    const servers = await get_tested();
+    this.update_buffer = [...this.update_buffer, ...servers];
   }
 
   async update() {

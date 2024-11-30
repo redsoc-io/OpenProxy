@@ -5,7 +5,7 @@ const get_untested = async () => {
     where: {
       tested: false,
     },
-    take: 10,
+    take: 30,
     orderBy: {
       addedOn: "asc",
     },
