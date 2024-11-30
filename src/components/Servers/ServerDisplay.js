@@ -83,7 +83,7 @@ export default function ServerDisplay({ server, grid = false, percent = 22 }) {
                       <ImClock2 />
                     </span>
                     <span className="font-semibold text-gray-500">
-                      <Updated updated={server.last_checked} />
+                      <Updated updated={server.lastChecked} />
                     </span>
                   </div>
                 </div>
