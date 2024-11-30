@@ -8,18 +8,7 @@ import lookup from "country-code-lookup";
 import { IoReload } from "react-icons/io5";
 import { CiBoxList } from "react-icons/ci";
 let refreshInterval;
-import dynamic from "next/dynamic";
-
-const { ResponsiveMasonry } = dynamic(
-  () => import("react-responsive-masonry"),
-  {
-    loading: () => <p>Loading...</p>,
-  }
-);
-
-const Masonry = dynamic(() => import("react-responsive-masonry"), {
-  loading: () => <p>Loading...</p>,
-});
+import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 
 export default function Servers({}) {
   const inputRef = useRef(null);
@@ -64,7 +53,7 @@ export default function Servers({}) {
   });
 
   const response_times = data
-    .map((server) => server.response_time)
+    .map((server) => server.responseTime)
     .sort((a, b) => a - b);
 
   const [rt_min, rt_max] = [
@@ -75,7 +64,7 @@ export default function Servers({}) {
   data = data.map((server) => {
     server.percent =
       100 -
-      Math.floor(((server.response_time - rt_min) / (rt_max - rt_min)) * 100);
+      Math.floor(((server.responseTime - rt_min) / (rt_max - rt_min)) * 100);
     return server;
   });
 
@@ -102,7 +91,7 @@ export default function Servers({}) {
       if (sort === "streak") {
         return b.streak - a.streak;
       } else if (sort === "response_time") {
-        return a.response_time - b.response_time;
+        return a.responseTime - b.responseTime;
       }
     });
 
@@ -253,7 +242,7 @@ export default function Servers({}) {
             )}
           </>
         )}
-        {loading && <LoaderLimit />}
+        {/* {loading && <LoaderLimit />} */}
       </div>
     </div>
   );

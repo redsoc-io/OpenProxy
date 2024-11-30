@@ -47,7 +47,7 @@ export default function ServerDisplay({ server, grid = false, percent = 22 }) {
                   <span
                     className={`text-xs ${server_speed_color} rounded-md py-1 px-2 text-white block`}
                   >
-                    {server.response_time} ms
+                    {server.responseTime} ms
                   </span>
                 </div>
               </div>
@@ -114,7 +114,7 @@ export default function ServerDisplay({ server, grid = false, percent = 22 }) {
           <span
             className={`text-sm ${server_speed_color} rounded-md py-1 px-2 text-white block w-24 text-center font-bold`}
           >
-            {server.response_time} ms
+            {server.responseTime} ms
           </span>
         </Td>
         <Td>
@@ -126,7 +126,7 @@ export default function ServerDisplay({ server, grid = false, percent = 22 }) {
           </div>
         </Td>
         <Td>
-          <Updated updated={server.last_checked} />
+          <Updated updated={server.lastChecked} />
         </Td>
       </tr>
     );
