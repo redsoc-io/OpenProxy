@@ -1,0 +1,21 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model servers {
+  id           String    @id @map("_id")
+  url          String    @unique
+  tested       Boolean   @default(false)
+  working      Boolean   @default(false)
+  addedOn      DateTime  @default(now()) @db.Date
+  lastOnline   DateTime? @db.Date
+  lastChecked  DateTime? @db.Date
+  responseTime Int?      @default(-1)
+  streak       Int       @default(0)
+  geo          String?
+}

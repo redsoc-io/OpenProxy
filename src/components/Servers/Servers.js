@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from "react";
-import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 import { BsUiChecksGrid, BsViewList } from "react-icons/bs";
 import Head from "next/head";
 import LoaderLimit from "./LoaderLimit";
@@ -9,6 +8,18 @@ import lookup from "country-code-lookup";
 import { IoReload } from "react-icons/io5";
 import { CiBoxList } from "react-icons/ci";
 let refreshInterval;
+import dynamic from "next/dynamic";
+
+const { ResponsiveMasonry } = dynamic(
+  () => import("react-responsive-masonry"),
+  {
+    loading: () => <p>Loading...</p>,
+  }
+);
+
+const Masonry = dynamic(() => import("react-responsive-masonry"), {
+  loading: () => <p>Loading...</p>,
+});
 
 export default function Servers({}) {
   const inputRef = useRef(null);

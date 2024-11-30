@@ -15,26 +15,21 @@ async function downloadFileWithProxy(proxyUrl) {
   }
 
   return new Promise(async (resolve, reject) => {
-    setTimeout(() => {
-      reject("Timeout!");
-    }, 10000);
-
     let response = null,
       start = Date.now();
+    const { CancelToken } = axios;
 
     try {
-      response = await axios({
-        method: "GET",
-        url: `${url}`,
+      response = await axios.get(url, {
+        cancelToken: new CancelToken(function executor(c) {
+          setTimeout(c, 10000);
+        }),
         httpAgent: agent,
         httpsAgent: agent,
         maxRedirects: 0,
-        onUploadProgress: (progressEvent) => {
-          console.log(progressEvent);
-        },
       });
     } catch (e) {
-      reject(e);
+      reject("Timeout Probably");
     }
 
     if (response === null || response.status !== 200) {
