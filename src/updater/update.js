@@ -1,7 +1,7 @@
 const db = require("../lib/db");
 
 const update = async (servers) => {
-  const updatedRecords = await prisma.$transaction(
+  const updatedRecords = await db.$transaction(
     servers.map((s) => {
       const d = { ...s };
       delete d.id;
