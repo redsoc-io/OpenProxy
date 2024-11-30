@@ -1,6 +1,6 @@
 const db = require("../lib/db");
 
-const get_working = async () => {
+const get_recently_active = async () => {
   return await db.servers.findMany({
     where: {
       working: false,
@@ -16,4 +16,4 @@ const get_working = async () => {
   });
 };
 
-module.exports = get_working;
+module.exports = get_recently_active;
