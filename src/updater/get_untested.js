@@ -4,8 +4,9 @@ const get_untested = async () => {
   const newest = await db.servers.findMany({
     where: {
       tested: false,
+      working: false,
     },
-    take: 30,
+    take: 200,
     orderBy: {
       addedOn: "asc",
     },

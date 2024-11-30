@@ -41,8 +41,10 @@ class UpdateSync {
   }
 
   async update() {
+    console.log(`Updating ${this.update_buffer.length} records.`);
     await update(this.update_buffer);
     this.update_buffer = [];
+    console.log("Done.");
   }
 
   async run() {

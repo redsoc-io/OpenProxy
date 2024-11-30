@@ -17,6 +17,7 @@
     "country-flag-icons": "^1.5.13",
     "dotenv": "^16.4.5",
     "https-proxy-agent": "^5.0.1",
+    "mongodb": "^6.11.0",
     "next": "15.0.3",
     "next-seo": "^6.6.0",
     "node-fetch": "^3.3.2",
