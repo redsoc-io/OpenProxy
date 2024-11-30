@@ -13,7 +13,7 @@ const revalidate_servers = async (servers) => {
       s.working = true;
     } catch (e) {
       s.responseTime = -1;
-      s.streak = 0;
+      s.streak = (s.streak || 1) - 1;
       s.working = false;
     }
     console.info(`[${s.working ? "✅" : "❌"}] Revalidated ${s.id}...`);
