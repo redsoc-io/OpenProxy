@@ -6,7 +6,7 @@
     "dev": "next dev --turbopack",
     "prebuild": "prisma generate",
     "build": "next build",
-    "prestart": "npm run updater",
+    "prestart": "npm run updater &",
     "start": "next start",
     "updater": "node src/updater/updater"
   },
