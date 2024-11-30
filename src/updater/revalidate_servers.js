@@ -9,7 +9,7 @@ const revalidate_servers = async (servers) => {
       s.geo = geo;
       s.responseTime = response_time;
       s.lastOnline = s.lastChecked;
-      s.streak = 1;
+      s.streak = (s.streak || 0) + 1;
       s.working = true;
     } catch (e) {
       s.responseTime = -1;
