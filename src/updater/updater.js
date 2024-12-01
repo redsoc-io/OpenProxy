@@ -44,6 +44,17 @@ class UpdateSync {
     this.update_buffer = [...this.update_buffer, ...servers];
   }
 
+  async remove_duplicates() {
+    const uniqueArray = this.update_buffer.filter(
+      (item, index, self) =>
+        index === self.findIndex((obj) => obj.id === item.id)
+    );
+    console.log(
+      `Removed ${this.update_buffer.length - uniqueArray.length} Duplicates.`
+    );
+    this.update_buffer = uniqueArray;
+  }
+
   async update() {
     console.log(`Updating ${this.update_buffer.length} records.`);
     await update(this.update_buffer);
@@ -58,6 +69,7 @@ class UpdateSync {
     await this.get_tested();
     await this.get_recently_active();
     await this.get_working();
+    await this.remove_duplicates();
     await this.revalidate();
     await this.update();
   }

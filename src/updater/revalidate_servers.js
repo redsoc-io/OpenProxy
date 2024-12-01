@@ -16,10 +16,12 @@ const revalidate_servers = async (servers) => {
       s.streak = (s.streak || 1) - 1;
       s.working = false;
     }
-    console.info(`[${s.working ? "✅" : "❌"}] Revalidated ${s.id}...`);
     return s;
   });
   const wt = await Promise.all(rl);
+  const n_working = wt.filter(({ working }) => !working).length;
+  const y_working = wt.filter(({ working }) => !!working).length;
+  console.info(`✅ ${y_working} | ❌ ${n_working}`);
   return wt;
 };
 
