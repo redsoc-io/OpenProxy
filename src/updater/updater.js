@@ -47,13 +47,22 @@ class UpdateSync {
     console.log("Done.");
   }
 
-  async run() {
+  async processes() {
+    this.update_buffer = [];
     await this.find_new();
     await this.get_untested();
     await this.get_recently_active();
     await this.get_working();
     await this.revalidate();
     await this.update();
+  }
+
+  async run() {
+    try {
+      await this.processes();
+    } catch (e) {
+      console.error("Process had to exit");
+    }
     this.run();
   }
 }
