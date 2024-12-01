@@ -22,7 +22,7 @@ async function downloadFileWithProxy(proxyUrl) {
     try {
       response = await axios.get(url, {
         cancelToken: new CancelToken(function executor(c) {
-          setTimeout(c, 10000);
+          setTimeout(c, 5000);
         }),
         httpAgent: agent,
         httpsAgent: agent,
