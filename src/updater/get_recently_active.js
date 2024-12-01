@@ -9,7 +9,7 @@ const get_recently_active = async () => {
         not: null,
       },
     },
-    take: 10,
+    take: 100,
     orderBy: {
       lastChecked: "asc",
     },

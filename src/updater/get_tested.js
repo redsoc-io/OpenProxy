@@ -6,7 +6,7 @@ const get_tested = async () => {
       tested: true,
       working: false,
     },
-    take: 10,
+    take: 100,
     orderBy: {
       lastChecked: "asc",
     },
