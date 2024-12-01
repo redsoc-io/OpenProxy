@@ -56,10 +56,9 @@ class UpdateSync {
   }
 
   async update() {
-    console.log(`Updating ${this.update_buffer.length} records.`);
     await update(this.update_buffer);
     this.update_buffer = [];
-    console.log("Done.");
+    console.log("\n**********************\n");
   }
 
   async processes() {
@@ -68,8 +67,8 @@ class UpdateSync {
     await this.get_untested();
     await this.get_tested();
     await this.get_recently_active();
-    await this.get_working();
     await this.remove_duplicates();
+    await this.get_working();
     await this.revalidate();
     await this.update();
   }
