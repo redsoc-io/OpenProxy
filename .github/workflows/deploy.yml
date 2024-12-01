@@ -13,6 +13,6 @@ jobs:
       - name: Pull
         run: cd /home/ubuntu/opp/ && git pull
       - name: Build
-        run: npm i && npm run build
+        run: zsh -c "cd /home/ubuntu/opp/ && npm i && npm run build"
       - name: Restart Server
         run: pm2 restart opp
