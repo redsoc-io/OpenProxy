@@ -10,17 +10,9 @@ jobs:
     runs-on: redsoc
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 1
+      - name: Pull
+        run: cd /home/ubuntu/opp/ && git pull
       - name: Build
         run: npm i && npm run build
-      - name: Make staging
-        run: mkdir -p /home/ubuntu/opp/.stage
-      - name: Copy files
-        run: cp -r * /home/ubuntu/opp/.stage/
-      - name: Move to Production
-        run: rm -rf /home/ubuntu/opp/prod && mv /home/ubuntu/opp/.stage /home/ubuntu/opp/prod
       - name: Restart Server
         run: pm2 restart opp
