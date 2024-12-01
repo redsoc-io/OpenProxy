@@ -6,7 +6,7 @@
     "dev": "next dev --turbopack",
     "prebuild": "prisma generate",
     "build": "next build",
-    "prestart": "npm run updater &",
+    "prestart": "pm2 start ./run_updater.sh --name updater --watch",
     "start": "next start",
     "updater": "node src/updater/updater"
   },
@@ -22,6 +22,7 @@
     "next-seo": "^6.6.0",
     "node-fetch": "^3.3.2",
     "nprogress": "^0.2.0",
+    "pm2": "^5.4.3",
     "prisma": "^6.0.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
