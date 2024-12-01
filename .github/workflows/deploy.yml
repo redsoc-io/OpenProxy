@@ -15,4 +15,4 @@ jobs:
       - name: Build
         run: zsh -c "source /home/ubuntu/.zshrc && cd /home/ubuntu/opp/ && npm i && npm run build"
       - name: Restart Server
-        run: pm2 restart opp
+        run: zsh -c "source /home/ubuntu/.zshrc && pm2 restart opp"
