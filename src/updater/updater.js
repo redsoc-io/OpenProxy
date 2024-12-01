@@ -55,6 +55,7 @@ class UpdateSync {
     this.update_buffer = [];
     await this.find_new();
     await this.get_untested();
+    await this.get_tested();
     await this.get_recently_active();
     await this.get_working();
     await this.revalidate();
