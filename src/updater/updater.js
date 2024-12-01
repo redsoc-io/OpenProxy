@@ -18,16 +18,19 @@ class UpdateSync {
 
   async get_untested() {
     const servers = await get_untested();
+    console.info(`Scheduled ${servers.length} untested servers.`);
     this.update_buffer = [...this.update_buffer, ...servers];
   }
 
   async get_recently_active() {
     const servers = await get_recently_active();
+    console.info(`Scheduled ${servers.length} recently active servers.`);
     this.update_buffer = [...this.update_buffer, ...servers];
   }
 
   async get_working() {
     const servers = await get_working();
+    console.info(`Scheduled ${servers.length} working servers.`);
     this.update_buffer = [...this.update_buffer, ...servers];
   }
 
@@ -37,6 +40,7 @@ class UpdateSync {
 
   async get_tested() {
     const servers = await get_tested();
+    console.info(`Scheduled ${servers.length} servers for retesting.`);
     this.update_buffer = [...this.update_buffer, ...servers];
   }
 
