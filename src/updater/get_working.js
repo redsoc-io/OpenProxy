@@ -9,7 +9,7 @@ const get_working = async () => {
         lt: ta,
       },
     },
-    take: 5,
+    take: 20,
     orderBy: {
       lastChecked: "asc",
     },

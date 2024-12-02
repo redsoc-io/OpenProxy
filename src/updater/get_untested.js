@@ -6,7 +6,7 @@ const get_untested = async () => {
       tested: false,
       working: false,
     },
-    take: 10,
+    take: 20,
     orderBy: {
       addedOn: "asc",
     },
