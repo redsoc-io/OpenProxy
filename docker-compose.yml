@@ -19,3 +19,13 @@ services:
     volumes:
       - ./.redis-data:/data
     restart: unless-stopped
+
+  watchtower:
+    image: containrrr/watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - WATCHTOWER_POLL_INTERVAL=60
+      - WATCHTOWER_CLEANUP=true
+    command: --run-once app
+    restart: unless-stopped
