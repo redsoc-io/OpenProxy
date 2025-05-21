@@ -1,19 +1,16 @@
-const db = require("../lib/mongodb");
+const proxyService = require("../lib/proxyService");
 
 const update = async (servers) => {
-  const t = servers.map((s) => {
-    const d = { ...s };
-    delete d.id;
-    return {
-      updateOne: {
-        filter: { _id: s.id },
-        update: { $set: d },
-      },
-    };
+  const operations = servers.map((server) => {
+    const { id, ...data } = server;
+    return proxyService.updateServer(id, data);
   });
-  const result = await db.db("servers").collection("servers").bulkWrite(t);
-  console.log(`Updated ${result.modifiedCount} Records.`);
-  return result;
+
+  const results = await Promise.all(operations);
+  const modifiedCount = results.filter(Boolean).length;
+  
+  console.log(`Updated ${modifiedCount} Records.`);
+  return { modifiedCount };
 };
 
 module.exports = update;

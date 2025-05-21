@@ -1,18 +1,18 @@
-const db = require("../lib/db");
+const proxyService = require("../lib/proxyService");
 
 const get_recently_active = async () => {
-  return await db.servers.findMany({
+  return await proxyService.findMany({
     where: {
       working: false,
       tested: true,
       lastOnline: {
-        not: null,
-      },
+        not: null
+      }
     },
     take: 50,
     orderBy: {
-      lastChecked: "asc",
-    },
+      lastChecked: 'asc'
+    }
   });
 };
 

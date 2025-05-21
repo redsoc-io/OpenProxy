@@ -1,15 +1,15 @@
-const db = require("../lib/db");
+const proxyService = require("../lib/proxyService");
 
 const get_tested = async () => {
-  return await db.servers.findMany({
+  return await proxyService.findMany({
     where: {
       tested: true,
-      working: false,
+      working: false
     },
     take: 50,
     orderBy: {
-      lastChecked: "asc",
-    },
+      lastChecked: 'asc'
+    }
   });
 };
 
