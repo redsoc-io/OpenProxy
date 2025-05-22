@@ -8,7 +8,8 @@ class ProxyService {
 
   async addServer(server) {
     const { id, url, ...data } = server;
-    await this.client.hset(`server:${id}`, {
+    const pipeline = this.client.pipeline();
+    pipeline.hset(`server:${id}`, {
       id,
       url,
       tested: false,
@@ -16,7 +17,8 @@ class ProxyService {
       addedOn: new Date().toISOString(),
       ...data
     });
-    await this.client.sadd('servers', id);
+    pipeline.sadd('servers', id);
+    await pipeline.exec();
   }
 
   async getServer(id) {
@@ -27,12 +29,15 @@ class ProxyService {
 
   async findMany({ where = {}, take = null, orderBy = null } = {}) {
     const serverIds = await this.client.smembers('servers');
-    const servers = await Promise.all(
-      serverIds.map(id => this.getServer(id))
-    );
+    const pipeline = this.client.pipeline();
+    serverIds.forEach(id => pipeline.hgetall(`server:${id}`));
+    const results = await pipeline.exec();
+    let servers = results.map(([err, server]) => {
+      if (err || !server || Object.keys(server).length === 0) return null;
+      return this.parseServer(server);
+    }).filter(server => server !== null);
 
     let filteredServers = servers.filter(server => {
-      if (!server) return false;
       return Object.entries(where).every(([key, value]) => {
         if (typeof value === 'object') {
           if (value.not === null) return server[key] !== null;
@@ -60,7 +65,6 @@ class ProxyService {
   async updateServer(id, data) {
     const server = await this.getServer(id);
     if (!server) return null;
-
     const updatedData = { ...server, ...data };
     await this.client.hset(`server:${id}`, updatedData);
     return updatedData;
