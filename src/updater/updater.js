@@ -64,12 +64,14 @@ class UpdateSync {
   async processes() {
     this.update_buffer = [];
     await this.find_new();
-    await this.get_untested();
-    await this.get_tested();
-    await this.get_recently_active();
-    await this.remove_duplicates();
-    await this.get_working();
-    await this.revalidate();
+    await Promise.all([
+      this.get_untested(),
+      this.get_tested(),
+      this.get_recently_active(),
+      this.get_working(),
+    ]);
+    await this.remove_duplicates()
+    await this.revalidate()
     await this.update();
   }
 

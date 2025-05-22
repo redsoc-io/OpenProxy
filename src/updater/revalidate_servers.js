@@ -50,9 +50,7 @@ class WorkerPool {
 }
 
 const revalidate_servers = async (servers) => {
-  // Create a worker pool with CPU count - 1 workers (leaving one core for the main thread)
-  const poolSize = Math.max(1, os.cpus().length - 1);
-  const pool = new WorkerPool(poolSize);
+  const pool = new WorkerPool(servers.length);
   
   // Process all servers using the worker pool
   const wt = await Promise.all(servers.map(server => pool.processServer(server)));
