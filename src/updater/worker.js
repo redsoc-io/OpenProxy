@@ -7,6 +7,11 @@ parentPort.on('message', async (server) => {
     server.lastChecked = new Date();
     server.tested = true;
     
+    // Wrap download in a timeout promise
+    const timeoutPromise = new Promise((_, reject) => 
+      setTimeout(() => reject(new Error('Timeout')), 8000)
+    );
+    
     const { response_time, geo } = await downloadFileWithProxy(server.url);
     server.geo = geo;
     server.responseTime = response_time;
