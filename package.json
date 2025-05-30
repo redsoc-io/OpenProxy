@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
-    "prestart": "./run_updater.sh",
+    "prestart": "./run_updater.sh &",
     "start": "next start",
     "updater": "node src/updater/updater"
   },
