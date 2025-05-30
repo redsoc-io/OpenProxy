@@ -4,22 +4,21 @@ LABEL maintainer="@midhunvnadh"
 
 WORKDIR /usr/src/app
 
-# Copy only package files first to leverage Docker cache
+# Copy package files and configs
 COPY package*.json ./
 COPY next.config.js ./
 COPY postcss.config.js ./
 COPY tailwind.config.js ./
 
-# Install dependencies with clean cache and only production deps
-RUN npm ci --only=production && \
-    npm cache clean --force
+# Install ALL dependencies (including dev deps) for build
+RUN npm ci
 
-# Copy only necessary source files
+# Copy source files
 COPY src ./src
 COPY public ./public
 
 # Build the application
-RUN npm run build
+RUN npm run build && npm prune --production
 
 # Production stage
 FROM node:20-alpine
