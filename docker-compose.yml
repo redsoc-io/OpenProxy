@@ -20,6 +20,23 @@ services:
       - ./.redis-data:/data
     restart: unless-stopped
 
+  updater:
+    build:
+      context: .
+      dockerfile: Dockerfile.updater
+    environment:
+      - REDIS_URL=redis://redis:6379
+    ports:
+      - "8080:8080"  # Health check endpoint
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    depends_on:
+      - redis
+    restart: unless-stopped
+
   watchtower:
     image: containrrr/watchtower
     volumes:

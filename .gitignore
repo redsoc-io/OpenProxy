@@ -38,3 +38,4 @@ next-env.d.ts
 data/*.json
 
 .redis-data
+bin/

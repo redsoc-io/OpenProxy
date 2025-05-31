@@ -1,0 +1,47 @@
+# Build stage
+FROM golang:1.20-alpine AS builder
+LABEL maintainer="@midhunvnadh"
+
+WORKDIR /usr/src/app
+
+# Install build dependencies
+RUN apk add --no-cache git ca-certificates tzdata
+
+# Copy go mod and sum files
+COPY go.mod go.sum ./
+
+# Download all dependencies
+RUN go mod download
+
+# Copy source files
+COPY src ./src
+
+# Build the application with optimizations
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -o updater ./src/cmd/updater/
+
+# Production stage
+FROM alpine:latest
+WORKDIR /usr/src/app
+
+# Install runtime dependencies
+RUN apk add --no-cache ca-certificates tzdata
+
+# Copy the binary and any additional files from builder
+COPY --from=builder /usr/src/app/updater .
+
+# Set environment variables
+ENV TZ=UTC \
+    GO_ENV=production
+
+# Create a non-root user
+RUN adduser -D -g '' appuser && \
+    chown -R appuser:appuser /usr/src/app
+
+# Switch to non-root user
+USER appuser
+
+# Expose health check port
+EXPOSE 8080
+
+# Command to run the executable
+ENTRYPOINT ["./updater"]

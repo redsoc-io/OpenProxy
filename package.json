@@ -6,8 +6,7 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "prestart": "./run_updater.sh &",
-    "start": "next start",
-    "updater": "node src/updater/updater"
+    "start": "next start"
   },
   "dependencies": {
     "axios": "^1.7.7",
