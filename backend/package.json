@@ -1,0 +1,19 @@
+{
+  "name": "openproxy-backend",
+  "version": "0.1.0",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node --expose-gc src/index.js",
+    "worker": "node --expose-gc src/worker/index.js"
+  },
+  "dependencies": {
+    "hono": "^4.0.0",
+    "@hono/node-server": "^1.0.8",
+    "better-sqlite3": "^12.4.1",
+    "cors": "^2.8.5",
+    "axios": "^1.6.0",
+    "socks-proxy-agent": "^8.0.2",
+    "https-proxy-agent": "^7.0.2"
+  },
+  "type": "module"
+}
